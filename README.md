@@ -1,8 +1,26 @@
 # Win11Desk
 
+```
+ __        ___       _  _ ____       _     
+ \ \      / (_)_ __ | || |  _ \  ___| | __
+  \ \ /\ / /| | '_ \| || | | | |/ _ \ |/ /
+   \ V  V / | | | | |__   _| |_| |  __/   < 
+    \_/\_/  |_|_| |_|  |_| |____/ \___|_|\_\
+```
+
+**Linux → Windows deployment, with the guardrails kept visible.**
+
 A self-hosted Windows deployment dashboard for authorized Linux VPS targets. Win11Desk generates short-lived, integrity-checked installer commands, tracks deployment progress, and keeps sensitive credentials encrypted.
 
 > Important: This software can replace a target server disk and reboot it. Use it only on a disposable or fully backed-up VPS that you own or are authorized to manage.
+
+<p align="center">
+  <img src="docs/preview.svg" alt="Win11Desk dashboard preview mockup" width="100%">
+</p>
+
+<p align="center">
+  <em>UI preview mockup — configure the dashboard with your own authorized target and Microsoft-sourced media.</em>
+</p>
 
 ## Features
 

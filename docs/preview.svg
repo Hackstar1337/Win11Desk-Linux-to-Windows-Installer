@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 820" role="img" aria-labelledby="title desc">
+  <title id="title">Win11Desk dashboard preview</title>
+  <desc id="desc">A dark dashboard mockup showing deployment health, target details, progress, and a safe installer workflow.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop stop-color="#07111f"/><stop offset="1" stop-color="#101d31"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" x2="1">
+      <stop stop-color="#22d3ee"/><stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="18" stdDeviation="20" flood-color="#000" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect width="1400" height="820" rx="28" fill="#050b14"/>
+  <rect x="24" y="24" width="1352" height="772" rx="22" fill="url(#bg)" stroke="#263a54"/>
+  <rect x="24" y="24" width="1352" height="74" rx="22" fill="#0c1727"/>
+  <circle cx="62" cy="61" r="10" fill="#fb7185"/><circle cx="94" cy="61" r="10" fill="#fbbf24"/><circle cx="126" cy="61" r="10" fill="#34d399"/>
+  <text x="174" y="69" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="27" font-weight="700">Win11Desk</text>
+  <text x="1216" y="68" fill="#8da4bf" font-family="Inter,Arial,sans-serif" font-size="15">AUTHORIZED DEPLOYMENT</text>
+  <rect x="24" y="98" width="260" height="698" fill="#081321"/>
+  <text x="58" y="150" fill="#7dd3fc" font-family="monospace" font-size="13" letter-spacing="2">CONTROL CENTER</text>
+  <g font-family="Inter,Arial,sans-serif" font-size="18">
+    <rect x="48" y="182" width="210" height="52" rx="12" fill="#15314b"/><text x="72" y="215" fill="#e0f2fe">Overview</text>
+    <text x="72" y="277" fill="#8da4bf">Installer</text><text x="72" y="335" fill="#8da4bf">Deployment history</text>
+    <text x="72" y="393" fill="#8da4bf">Health &amp; audit</text><text x="72" y="451" fill="#8da4bf">Settings</text>
+  </g>
+  <text x="338" y="162" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="700">Deployment overview</text>
+  <text x="338" y="195" fill="#8da4bf" font-family="Inter,Arial,sans-serif" font-size="16">A calm, auditable path from Linux VPS to Windows.</text>
+  <g filter="url(#shadow)">
+    <rect x="338" y="232" width="300" height="142" rx="18" fill="#10263a" stroke="#1d4561"/>
+    <text x="364" y="270" fill="#8da4bf" font-family="Inter,Arial,sans-serif" font-size="15">ACTIVE TARGETS</text>
+    <text x="364" y="330" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="46" font-weight="700">03</text>
+    <text x="475" y="329" fill="#34d399" font-family="Inter,Arial,sans-serif" font-size="16">● healthy</text>
+    <rect x="660" y="232" width="300" height="142" rx="18" fill="#10263a" stroke="#1d4561"/>
+    <text x="686" y="270" fill="#8da4bf" font-family="Inter,Arial,sans-serif" font-size="15">INSTALLER STATUS</text>
+    <text x="686" y="330" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700">Ready to review</text>
+    <text x="686" y="354" fill="#fbbf24" font-family="Inter,Arial,sans-serif" font-size="14">● confirmation required</text>
+    <rect x="982" y="232" width="354" height="142" rx="18" fill="#10263a" stroke="#1d4561"/>
+    <text x="1008" y="270" fill="#8da4bf" font-family="Inter,Arial,sans-serif" font-size="15">MEDIA SOURCE</text>
+    <text x="1008" y="317" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="700">Microsoft Windows 11</text>
+    <text x="1008" y="348" fill="#8da4bf" font-family="Inter,Arial,sans-serif" font-size="14">HTTPS + integrity checked</text>
+  </g>
+  <rect x="338" y="412" width="998" height="300" rx="18" fill="#0b1726" stroke="#1d4561"/>
+  <text x="370" y="454" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="22" font-weight="700">Current deployment</text>
+  <rect x="370" y="486" width="935" height="14" rx="7" fill="#1b3147"/>
+  <rect x="370" y="486" width="612" height="14" rx="7" fill="url(#accent)"/>
+  <text x="370" y="540" fill="#f8fafc" font-family="Inter,Arial,sans-serif" font-size="30" font-weight="700">65%</text>
+  <text x="462" y="539" fill="#8da4bf" font-family="Inter,Arial,sans-serif" font-size="16">Preparing target disk • win11desk-edge-01</text>
+  <line x1="370" y1="582" x2="1305" y2="582" stroke="#21364d"/>
+  <circle cx="386" cy="622" r="9" fill="#34d399"/><text x="410" y="629" fill="#cbd5e1" font-family="Inter,Arial,sans-serif" font-size="16">Preflight checks passed</text>
+  <circle cx="650" cy="622" r="9" fill="#34d399"/><text x="674" y="629" fill="#cbd5e1" font-family="Inter,Arial,sans-serif" font-size="16">ISO verified</text>
+  <circle cx="850" cy="622" r="9" fill="#22d3ee"/><text x="874" y="629" fill="#cbd5e1" font-family="Inter,Arial,sans-serif" font-size="16">Writing installer</text>
+  <circle cx="1085" cy="622" r="9" fill="#42566b"/><text x="1109" y="629" fill="#71859c" font-family="Inter,Arial,sans-serif" font-size="16">Final reboot</text>
+  <rect x="370" y="657" width="204" height="35" rx="9" fill="#172b42"/><text x="392" y="680" fill="#7dd3fc" font-family="monospace" font-size="13">AUDIT LOG ENABLED</text>
+</svg>
