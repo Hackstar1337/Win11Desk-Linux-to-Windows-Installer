@@ -1,0 +1,55 @@
+services:
+  database:
+    image: mysql:8.4.7
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: win11desk
+      MYSQL_USER: win11desk
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Run deploy/configure.py}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:?Run deploy/configure.py}
+    volumes: ['${DATA_ROOT:-/srv/win11desk}/data/mysql:/var/lib/mysql']
+    networks: [internal]
+    healthcheck:
+      test: [CMD-SHELL, 'mysqladmin ping -h127.0.0.1 -uroot -p"$$MYSQL_ROOT_PASSWORD" --silent']
+      interval: 10s
+      timeout: 5s
+      retries: 18
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+  app:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment: {NODE_ENV: production, PORT: '3000', TRUST_PROXY: '1'}
+    depends_on:
+      database: {condition: service_healthy}
+    expose: ['3000']
+    networks: [internal]
+    read_only: true
+    volumes: ['./operations-status:/app/operations-status:ro']
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    healthcheck:
+      test: [CMD, node, -e, "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 20s
+      timeout: 8s
+      retries: 5
+      start_period: 30s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+  proxy:
+    image: caddy:2.10.2-alpine
+    restart: unless-stopped
+    environment: {APP_DOMAIN: '${APP_DOMAIN:?Run deploy/configure.py}'}
+    ports: ['80:80', '443:443']
+    volumes: ['./deploy/Caddyfile:/etc/caddy/Caddyfile:ro', '${DATA_ROOT:-/srv/win11desk}/proxy/data:/data', '${DATA_ROOT:-/srv/win11desk}/proxy/config:/config']
+    networks: [internal]
+    depends_on: [app]
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+networks:
+  internal: {driver: bridge}
