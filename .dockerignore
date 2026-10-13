@@ -1,0 +1,15 @@
+.git
+node_modules
+dist
+.env
+.env.*
+!.env.example
+*.zip
+release
+artifacts
+__pycache__
+*.iso
+test-evidence
+.manus
+.history
+.manus-logs
