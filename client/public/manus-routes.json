@@ -1,0 +1,80 @@
+{
+  "routes": [
+    {
+      "path": "/",
+      "title": "Overview"
+    },
+    {
+      "path": "/login",
+      "title": "Admin login"
+    },
+    {
+      "path": "/setup",
+      "title": "Owner setup"
+    },
+    {
+      "path": "/recovery",
+      "title": "Account recovery"
+    },
+    {
+      "path": "/invite",
+      "title": "Accept invitation"
+    },
+    {
+      "path": "/invite/:token",
+      "title": "Accept invitation"
+    },
+    {
+      "path": "/installer",
+      "title": "Windows installer"
+    },
+    {
+      "path": "/commands",
+      "title": "Issued commands"
+    },
+    {
+      "path": "/deployments",
+      "title": "Deployment history"
+    },
+    {
+      "path": "/deployments/:id",
+      "title": "Deployment detail"
+    },
+    {
+      "path": "/presets",
+      "title": "Legacy redirect to deployment profiles"
+    },
+    {
+      "path": "/settings",
+      "title": "Legacy redirect to deployment profiles"
+    },
+    {
+      "path": "/users",
+      "title": "Users"
+    },
+    {
+      "path": "/activity",
+      "title": "Legacy redirect to Operations"
+    },
+    {
+      "path": "/account",
+      "title": "Account security"
+    },
+    {
+      "path": "/track/:id",
+      "title": "Private tracker"
+    },
+    {
+      "path": "/operations",
+      "title": "Operations"
+    },
+    {
+      "path": "/profiles",
+      "title": "Deployment profiles"
+    },
+    {
+      "path": "/profiles/:id",
+      "title": "Deployment profile detail"
+    }
+  ]
+}
