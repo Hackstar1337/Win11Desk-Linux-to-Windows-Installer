@@ -122,7 +122,7 @@ async function main() {
   await req("/api/admin/commands", "POST", {}, 403, { "X-CSRF-Token": "bad" });
   ok("CSRF rejected");
   const source =
-      "https://example.com/windows11.iso",
+      "https://example.com/test-windows.iso",
     wp = "Win123!x";
   const profileInput = {
     name: `Core synthetic ${crypto.randomUUID().slice(0, 8)}`,

@@ -45,14 +45,13 @@ export default function InstallerPackage({
         />
         <div className="source-meta">
           <span>Windows 11 Pro · x64</span>
-          <a
-            href="https://www.microsoft.com/software-download/windows11"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => change("")}
             className="text-button"
           >
-            Get a Windows 11 ISO from Microsoft
-          </a>
+            Clear ISO URL
+          </button>
         </div>
         <p className="helper-text">
           Your VPS downloads directly from this link. Change it if needed; no

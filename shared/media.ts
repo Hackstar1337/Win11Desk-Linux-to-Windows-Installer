@@ -1,8 +1,8 @@
 import { targetDefaults, type InstallTarget } from "./installer";
 
-// Supply a direct official ISO link in the dashboard; no ISO is bundled or preconfigured.
 export const defaultIsoUrl = "";
-export const defaultIsoSha256 = "auto";
+export const defaultIsoSha256 =
+  "bd4307df32bc8af33b39ccecb1174aeb345386630f89a2b86c7a4e36b55ea650";
 
 /** Every chosen source is used directly; there is no media proxy or alternate fallback. */
 export function downloadIsoUrl(value: string) {
@@ -13,7 +13,7 @@ export function automaticTarget(value: string): InstallTarget {
   return {
     ...targetDefaults,
     isoUrl,
-    isoSha256: "auto",
+    isoSha256: defaultIsoUrl && isoUrl === defaultIsoUrl ? defaultIsoSha256 : "auto",
     targetDisk: "auto",
     expectedHostname: "auto",
     autoReboot: true,

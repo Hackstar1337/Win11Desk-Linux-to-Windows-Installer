@@ -1,0 +1,14 @@
+{$APP_DOMAIN} {
+ encode zstd gzip
+ header {
+  X-Content-Type-Options nosniff
+  Referrer-Policy no-referrer
+  X-Frame-Options SAMEORIGIN
+  Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+  -Server
+ }
+ reverse_proxy app:3000 {
+  header_up X-Forwarded-Proto https
+  header_up X-Forwarded-Host {host}
+ }
+}

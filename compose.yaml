@@ -21,7 +21,7 @@ services:
     build: .
     restart: unless-stopped
     env_file: .env
-    environment: {NODE_ENV: production, PORT: '3000', TRUST_PROXY: '1'}
+    environment: {NODE_ENV: production, PORT: '3000', TRUST_PROXY: '1', REMOTE_INSTALL_ENABLED: '${REMOTE_INSTALL_ENABLED:-1}', REMOTE_BLOCKED_IPS: '${REMOTE_BLOCKED_IPS:-}'}
     depends_on:
       database: {condition: service_healthy}
     expose: ['3000']
@@ -37,6 +37,22 @@ services:
       timeout: 8s
       retries: 5
       start_period: 30s
+    logging:
+      driver: json-file
+      options: {max-size: 10m, max-file: '3'}
+  remote-worker:
+    build: .
+    command: [node, dist/remote-worker.js]
+    restart: unless-stopped
+    env_file: .env
+    environment: {NODE_ENV: production, REMOTE_INSTALL_ENABLED: '${REMOTE_INSTALL_ENABLED:-1}', REMOTE_BLOCKED_IPS: '${REMOTE_BLOCKED_IPS:-}'}
+    depends_on:
+      database: {condition: service_healthy}
+    networks: [internal]
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
     logging:
       driver: json-file
       options: {max-size: 10m, max-file: '3'}

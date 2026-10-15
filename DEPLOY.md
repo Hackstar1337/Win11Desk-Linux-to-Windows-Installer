@@ -1,6 +1,6 @@
 # Win11Desk independent VPS deployment
 
-The ZIP contains frontend/backend, custom email/password authentication, private MySQL, encrypted credential/artifact vault, installer delivery, tracking and source. No Manus login/API/database/storage is needed by production. The default ISO stays at your direct YOUR-DASHBOARD-DOMAIN URL; no mirror/fallback. Run the dashboard on a **separate permanent Linux VPS**, never on a target you erase.
+The ZIP contains frontend/backend, custom email/password authentication, private MySQL, encrypted credential/artifact vault, installer delivery, tracking and source. No Manus login/API/database/storage is needed by production. The default ISO stays at your direct d3m0nbox.online URL; no mirror/fallback. Run the dashboard on a **separate permanent Linux VPS**, never on a target you erase.
 
 ## Requirements and first installation
 

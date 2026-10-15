@@ -439,7 +439,8 @@ export function validateCommandInput(body: unknown) {
   const isoUrl =
     b.isoUrl === undefined
       ? defaultIsoUrl
-      : asString(b.isoUrl, "isoUrl", 1, 4096);
+      : asString(b.isoUrl, "isoUrl", 0, 4096);
+  if (!isoUrl) throw new InputError("Configure an ISO source before issuing an installer command");
   const parsed = new URL(isoUrl);
   if (
     parsed.protocol !== "https:" ||
@@ -1769,16 +1770,18 @@ async function updateSettings(req: Request, res: Response) {
       isoUrl:
         s.isoUrl === undefined
           ? defaultIsoUrl
-          : asString(s.isoUrl, "isoUrl", 1, 4096),
+          : asString(s.isoUrl, "isoUrl", 0, 4096),
     };
-    const parsed = new URL(next.isoUrl);
-    if (
-      parsed.protocol !== "https:" ||
-      parsed.username ||
-      parsed.password ||
-      parsed.hash
-    )
-      throw new InputError("ISO source must be direct HTTPS");
+    if (next.isoUrl) {
+      const parsed = new URL(next.isoUrl);
+      if (
+        parsed.protocol !== "https:" ||
+        parsed.username ||
+        parsed.password ||
+        parsed.hash
+      )
+        throw new InputError("ISO source must be direct HTTPS");
+    }
     const a = actor(req);
     const result = await transaction(async tx => {
       const current = (

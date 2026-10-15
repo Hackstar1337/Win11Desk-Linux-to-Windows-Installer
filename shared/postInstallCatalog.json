@@ -1,5 +1,19 @@
 [
   {
+    "id": "chrome",
+    "name": "Google Chrome",
+    "version": "User-supplied ChromeSetup.exe",
+    "filename": "ChromeSetup.exe",
+    "url": "/api/installer/assets/chrome/2684f9be514e035224363ed120077dfbe09975a90c35126d188aeec4aff42d1e/ChromeSetup.exe",
+    "sha256": "2684f9be514e035224363ed120077dfbe09975a90c35126d188aeec4aff42d1e",
+    "maxBytes": 13283768,
+    "publisher": "Google LLC",
+    "requireSignature": true,
+    "minBuild": 19041,
+    "sources": [],
+    "sourceNote": "Exact user-supplied ChromeSetup.exe,13283768 bytes. Pinned self-hosted delivery; filename not Enterprise MSI. Not executed."
+  },
+  {
     "id": "firefox",
     "name": "Mozilla Firefox",
     "version": "157.0.1",

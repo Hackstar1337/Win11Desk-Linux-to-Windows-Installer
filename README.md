@@ -1,67 +1,29 @@
 # Win11Desk
 
-```
- __        ___       _  _ ____       _     
- \ \      / (_)_ __ | || |  _ \  ___| | __
-  \ \ /\ / /| | '_ \| || | | | |/ _ \ |/ /
-   \ V  V / | | | | |__   _| |_| |  __/   < 
-    \_/\_/  |_|_| |_|  |_| |____/ \___|_|\_\
-```
+Windows 11 Pro-only configuration dashboard with automatic Linux VPS installation and private progress tracking.
 
-**Linux → Windows deployment, with the guardrails kept visible.**
+## ISO source configuration
 
-A self-hosted Windows deployment dashboard for authorized Linux VPS targets. Win11Desk generates short-lived, integrity-checked installer commands, tracks deployment progress, and keeps sensitive credentials encrypted.
+No default ISO download URL is configured. Set a direct HTTPS ISO URL in Deployment profiles before issuing an installer command. The VPS downloads directly from the selected address; no mirror or alternate-source fallback is used.
 
-> Important: This software can replace a target server disk and reboot it. Use it only on a disposable or fully backed-up VPS that you own or are authorized to manage.
+## Workflow and architecture
 
-<p align="center">
-  <img src="docs/preview.svg" alt="Win11Desk dashboard preview mockup" width="100%">
-</p>
+Set username/password/RDP (default TCP22), generate an automatic script and paste it in root SSH on a compatible disposable/backed-up VPS. Pasting authorizes system-disk erasure and automatic reboot; new page scripts have no terminal confirmation questions. Generated commands are private and expire after30 minutes; regenerate after changing settings or source. No OS is installed by the webpage itself.
 
-<p align="center">
-  <em>UI preview mockup — configure the dashboard with your own authorized target and Microsoft-sourced media.</em>
-</p>
+`server/pageInstallerDelivery.ts` seals validated settings into AES-GCM envelopes delivered by private HTTPS POST. Passwords are transiently processed, are not saved in browser drafts/tracker records, and can be recovered by anyone holding the command and its key. Source pinning and script hashes remain enforced.
 
-## Features
+`server/installTracking.ts` and `/track/:id` provide durable managed-MySQL runs with separate hashed capability access, per-execution rows and seven-day tracker expiry. Callbacks report real stages, Windows edition/build and local RDP listening. Completion persists after the bounded Windows reporter exits; it is not continuous uptime monitoring or external authentication/desktop verification. Nonterminal stale reports stay unknown. Tracker URL secrets use fragments.
 
-- Owner authentication with MFA and recovery codes
-- Encrypted installer artifacts and Windows credentials
-- Short-lived, capability-protected installer delivery
-- Direct ISO downloads with HTTPS validation and integrity checks
-- Deployment history, progress, health, audit, backup and restore tools
-- Docker Compose deployment with private MySQL and Caddy HTTPS
+## Serving and verification
 
-## Windows ISO setup
+Use `pnpm dev`, `pnpm check`, `pnpm test`, `pnpm build`, `pnpm start`; additive migrations use `pnpm db:migrate`. The main tracked generator requires managed database availability. `server/verifyDefaultIso.py` streams the configured default and verifies full trusted SHA256 without installing anything. The safe public transport verifiers use synthetic runs/impossible target guards and never execute OS installation.
 
-This release contains no bundled ISO and no preconfigured ISO download URL.
+Pinned upstream source is bin456789/reinstall commit `98f1e21013233d42750cc2e7a298a0818461d686`; source/license/provenance are in `vendor/reinstall`. Actual historic tests and recovery passed Windows11 Pro/build26300 and RDP22 authentication on Vultr. The source-host-only change is not a fresh destructive VPS installation test. Previous Drive-quota/mirror diagnostics remain historical records, not current serving instructions.
 
-1. Open Microsoft official Windows 11 download page: https://www.microsoft.com/software-download/windows11
-2. Download or generate the Windows 11 ISO using Microsoft's instructions.
-3. In Win11Desk, paste the direct HTTPS URL to the ISO into the Windows ISO URL field. A page URL is not enough; the URL must return the ISO file directly and may expire.
-4. Review the selected media and target carefully before generating a command.
+Optional apps/files/desktop settings remain separate post-install exports. Windows licensing/activation, first-login privacy choices, provider firewall and hardware compatibility remain user/provider responsibilities. RDP and temporary installer SSH can both use22 sequentially; an SSH banner is not RDP.
 
-Win11Desk does not mirror Microsoft media, bypass Microsoft licensing, or silently switch to another source. You are responsible for using media you are licensed and authorized to use.
+Current Preview remains temporary and unpublished. Script delivery/tracking require the HTTPS backend online; ISO transfer now depends only on the selected direct host, not on the website media stream. Permanent dashboard hosting is separate and must never use the VPS being reinstalled. No affiliation with Microsoft, TinyInstaller or upstream maintainers; browser logos are their owners' trademarks.
 
-## Quick start
+## Current standalone control center
 
-Use a separate permanent Linux VPS for the dashboard. Do not host it on the machine you intend to replace with Windows.
-
-    python3 deploy/configure.py
-    bash deploy/start.sh
-
-Then open https://YOUR-DASHBOARD-DOMAIN/setup, create the owner account, enable MFA, configure a deployment profile, and use the Installer page.
-
-## Development
-
-    pnpm install
-    pnpm check
-    pnpm test
-    pnpm build
-
-## Security notes
-
-Never commit .env, database backups, live credentials, private installer commands, or tokens. Read SECURITY.md before deploying. Commands are bearer secrets and must be treated like passwords.
-
-## License and attribution
-
-This project is MIT licensed. Microsoft, Windows, Docker, Caddy and browser names/logos are trademarks of their respective owners. Win11Desk is not affiliated with Microsoft.
+Custom email/password owner login, MFA/recovery, encrypted issued commands, live history/Created dates, credential Reveal, Trash/Restore/confirmed purge, presets and notes, audit, notifications and local legacy import are implemented. Production uses your private MySQL and domain with no required Manus service. See DEPLOY.md, deploy/KEY-ROTATION.md and TEST-REPORT.md.

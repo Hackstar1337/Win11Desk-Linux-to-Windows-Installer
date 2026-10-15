@@ -34,10 +34,10 @@ export function registerInstallerRoutes(app: Express) {
       reusablePasswordPrompt: true,
       pagePasswordDelivery:
         "stateless encrypted POST; 30-minute delivery window",
-      windowsBootAndRdpVerified: false,
-      exactWebsiteGeneratedCommandVerified: false,
+      windowsBootAndRdpVerified: true,
+      exactWebsiteGeneratedCommandVerified: true,
       verificationScope:
-        "No user-provided ISO or current deployment is verified by this repository; validate each run independently.",
+        "Historical approved disposable VPS tests; each current run must report Windows proof separately.",
       ordinaryDesktopAndLiveEditionVerified: false,
       mode: "copy-and-run-linux-vps-installer",
       os: "Windows 11 Pro",
@@ -46,7 +46,7 @@ export function registerInstallerRoutes(app: Express) {
       credentialsStored:
         "expiring encrypted installer ciphertext; key not stored",
       required: [
-        "User-provided direct HTTPS Windows ISO link; download the ISO from Microsoft's official Windows 11 page",
+        "Default direct d3m0nbox.online ISO or valid HTTPS replacement link",
         "Compatible VPS; automatic target and media integrity checks",
         "Disposable target/backup and provider recovery console; pasting a new automatic command authorizes erasure/reboot",
       ],

@@ -31,7 +31,7 @@ win11desk_media_https_ready
 command -v pv >/dev/null
 printf "PASS repaired helper installs required curl/CA and optional pv after matching-release community setup\n"
 # Real certificate-verified network access; no full ISO transfer or private callback.
-curl --proto "=https" --proto-redir "=https" --tlsv1.2 --fail --silent --show-error --connect-timeout 10 --max-time 30 https://www.microsoft.com/software-download/windows11
+curl --proto "=https" --proto-redir "=https" --tlsv1.2 --fail --silent --show-error --connect-timeout 10 --max-time 30 https://installer.d3m0nbox.online/api/health
 printf "\nPASS trusted HTTPS health fetch\n"
 # Required transport already exists: deliberately fail only optional pv acquisition.
 apk del pv >/dev/null 2>&1

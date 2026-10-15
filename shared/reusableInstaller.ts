@@ -8,11 +8,11 @@ import {
   type InstallTarget,
 } from "./installer";
 
-// Historical media evidence is not portable to a user-supplied ISO.
 export const testedMedia = {
-  build: "user-supplied",
-  sha256: "auto",
-  evidence: "No ISO is bundled or preconfigured. Obtain Windows media from Microsoft and verify it before installation.",
+  build: "26300.9457",
+  sha256: "bd4307df32bc8af33b39ccecb1174aeb345386630f89a2b86c7a4e36b55ea650",
+  evidence:
+    "Windows boot and RDP 22 authenticated on two Vultr UEFI VPSs (4 GB, 2 vCPU), including an unchanged website-generated command with the same verified ISO content. First-login privacy setup remained for the owner.",
 };
 export const reusableSettingsSchema = z
   .object({

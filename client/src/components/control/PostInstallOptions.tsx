@@ -4,6 +4,8 @@ import {
   type PostInstallView,
   selectablePostInstallAppIds,
   postInstallAppNames,
+  scriptCompatible,
+  attachedScript,
 } from "../../../../shared/postInstall";
 export default function PostInstallOptions({
   value,
@@ -14,6 +16,7 @@ export default function PostInstallOptions({
   onChange: (next: Options) => void;
   osId?: string;
 }) {
+  const compatible = !!osId && scriptCompatible(osId);
   return (
     <section
       className="post-install-options span-2"
@@ -74,6 +77,12 @@ export default function PostInstallOptions({
               </label>
             ))}
           </div>
+          {value.apps.includes("chrome") && (
+            <p className="form-hint">
+              ChromeSetup.exe · your supplied file,13,283,768 bytes. Download
+              only.
+            </p>
+          )}
           <label className="field">
             <span>Custom file link (optional)</span>
             <input
@@ -95,7 +104,36 @@ export default function PostInstallOptions({
           )}
         </div>
       )}
-      <p className="form-hint">Bundled browser installers and activation scripts are not included in this public release.</p>
+      <div className="post-option-heading post-script-option">
+        <div>
+          <strong>Run attached script after installation</strong>
+          <p>
+            {attachedScript.name} · runs once from a protected startup task
+            after Windows setup, RDP and network are ready. No login is
+            required. Changes Windows licensing; no automatic edition change.
+            Use only with a valid Windows license entitlement.
+          </p>
+          {!compatible && (
+            <small className="form-hint">
+              Available for Windows 10/11 client profiles only. This script’s
+              HWID mode does not support Windows Server.
+            </small>
+          )}
+        </div>
+        <label className="post-switch">
+          <input
+            type="checkbox"
+            role="switch"
+            aria-label="Run attached script after installation"
+            checked={value.runAttachedScript && compatible}
+            disabled={!compatible}
+            onChange={e =>
+              onChange({ ...value, runAttachedScript: e.target.checked })
+            }
+          />
+          <span>{value.runAttachedScript && compatible ? "On" : "Off"}</span>
+        </label>
+      </div>
     </section>
   );
 }

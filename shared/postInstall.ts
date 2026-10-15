@@ -8,6 +8,7 @@ export const postInstallAppIds = [
 ] as const;
 // Edge remains decodable for previously issued immutable commands/reports only.
 export const selectablePostInstallAppIds = [
+  "chrome",
   "firefox",
   "brave",
   "7zip",
@@ -64,16 +65,6 @@ export const postInstallOptionsSchema = z
   })
   .strict()
   .superRefine((v, ctx) => {
-    if (v.apps.includes("chrome") || v.apps.includes("edge"))
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "This bundled installer is not distributed in the public repository.",
-      });
-    if (v.runAttachedScript)
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Attached scripts are not distributed in the public repository.",
-      });
     if (new Set(v.apps).size !== v.apps.length)
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

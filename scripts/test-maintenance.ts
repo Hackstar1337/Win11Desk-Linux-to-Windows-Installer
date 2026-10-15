@@ -174,7 +174,7 @@ async function main() {
           name: "Maintenance fixture " + randomUUID().slice(0, 8),
           osId: "windows-11-pro",
           isoUrl:
-            "https://example.com/windows11.iso",
+            "https://example.com/test-windows.iso",
           username: "Administrator",
           remotePort: 22,
           retries: 10,

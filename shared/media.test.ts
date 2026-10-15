@@ -2,7 +2,6 @@ import { describe, it, expect } from "vitest";
 import { execFileSync } from "node:child_process";
 import {
   defaultIsoUrl,
-  defaultIsoSha256,
   downloadIsoUrl,
   automaticTarget,
 } from "./media";
@@ -10,13 +9,15 @@ import { defaults } from "./deployment";
 import { linuxInstaller, installerIssues } from "./installer";
 import { pageScript, sealPageSettings } from "../server/pageInstallerDelivery";
 
-describe("user-supplied direct media setup", () => {
-  it("ships without a default ISO source or pinned checksum", () => {
+const fixtureIsoUrl = "https://example.com/test-windows.iso";
+
+describe("direct media setup without a preset ISO URL", () => {
+  it("uses only the supplied direct URL and known checksum", () => {
     expect(defaultIsoUrl).toBe("");
-    expect(downloadIsoUrl(defaultIsoUrl)).toBe(defaultIsoUrl);
-    expect(automaticTarget(defaultIsoUrl).isoSha256).toBe(defaultIsoSha256);
-    expect(automaticTarget("  " + defaultIsoUrl + "  ").isoUrl).toBe(
-      defaultIsoUrl
+    expect(downloadIsoUrl(fixtureIsoUrl)).toBe(fixtureIsoUrl);
+    expect(automaticTarget(fixtureIsoUrl).isoSha256).toBe("auto");
+    expect(automaticTarget("  " + fixtureIsoUrl + "  ").isoUrl).toBe(
+      fixtureIsoUrl
     );
   });
   it("delivers that exact URL without alternate sources or media endpoints", () => {
@@ -25,26 +26,24 @@ describe("user-supplied direct media setup", () => {
         username: "Administrator",
         remotePort: 22,
         retries: 3,
-        target: automaticTarget(defaultIsoUrl),
+        target: automaticTarget(fixtureIsoUrl),
       },
       password: "Test-Only-Password!",
       automatic: true,
     });
     const script = pageScript(envelope);
-    expect(script).toContain("ISO_URL='" + defaultIsoUrl + "'");
+    expect(script).toContain("ISO_URL='" + fixtureIsoUrl + "'");
     expect(script).not.toContain("/api/installer/media/");
     expect(script).not.toContain("drive.usercontent.google.com");
     expect(script).toContain("AUTOMATIC='1'");
     execFileSync("bash", ["-n"], { input: script });
   });
   it("keeps auto disk/hostname and valid invisible defaults", () => {
-    const target = automaticTarget(defaultIsoUrl);
+    const target = automaticTarget(fixtureIsoUrl);
     expect(target.targetDisk).toBe("auto");
     expect(target.expectedHostname).toBe("auto");
-    expect(installerIssues(defaults, target).length).toBeGreaterThan(0);
-    const supplied = automaticTarget("https://example.com/windows11.iso");
-    expect(installerIssues(defaults, supplied)).toEqual([]);
-    execFileSync("bash", ["-n"], { input: linuxInstaller(defaults, supplied) });
+    expect(installerIssues(defaults, target)).toEqual([]);
+    execFileSync("bash", ["-n"], { input: linuxInstaller(defaults, target) });
   });
   it("keeps edited sources unchanged and fingerprints before boot staging", () => {
     const target = automaticTarget("https://example.com/custom.iso");
