@@ -1,0 +1,94 @@
+/* Official Vengeance UI MIT effect utilities. See components/vengeance/LICENSE and provenance.json. */
+/* GlowBorderCard Animation Utilities */
+@property --glow-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes glow-angle-rotate {
+  to {
+    --glow-angle: 1turn;
+  }
+}
+
+.glow-conic {
+  border-image: conic-gradient(
+      from var(--glow-angle),
+      var(--glow-color-1, #669900),
+      var(--glow-color-2, #99cc33),
+      var(--glow-color-3, #ccee66),
+      var(--glow-color-4, #006699),
+      var(--glow-color-5, #3399cc),
+      var(--glow-color-6, #990066),
+      var(--glow-color-7, #cc3399),
+      var(--glow-color-8, #ff6600),
+      var(--glow-color-9, #ff9900),
+      var(--glow-color-10, #ffcc00),
+      var(--glow-color-1, #669900)
+    )
+    1;
+  animation: glow-angle-rotate var(--glow-animation-duration, 4s) linear
+    infinite;
+}
+/* Spotlight Navbar Component Styles */
+.spotlight-nav {
+  --spotlight-color: rgba(0, 0, 0, 0.08);
+  --ambience-color: rgba(0, 0, 0, 0.8);
+}
+
+.dark .spotlight-nav {
+  --spotlight-color: rgba(255, 255, 255, 0.15);
+  --ambience-color: rgba(255, 255, 255, 1);
+}
+
+.spotlight-nav-bg {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.dark .spotlight-nav-bg {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+.spotlight-nav-shadow {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.05),
+    0 2px 4px -2px rgb(0 0 0 / 0.05);
+}
+
+.dark .spotlight-nav-shadow {
+  box-shadow:
+    0 4px 6px -1px rgb(0 0 0 / 0.3),
+    0 2px 4px -2px rgb(0 0 0 / 0.3);
+}
+
+/* Glass Component Borders */
+.glass-border {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.dark .glass-border {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.spotlight-nav-bg {
+  background-color: rgb(250, 250, 250);
+}
+
+.dark .spotlight-nav-bg {
+  background-color: rgb(10, 10, 10);
+}
+
+.spotlight-nav-shadow {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.15),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+.dark .spotlight-nav-shadow {
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.5),
+    0 4px 6px -4px rgba(0, 0, 0, 0.5);
+}

@@ -1,3 +1,4 @@
+import { RemoteJobsPage } from "./components/control/remote-install";
 import { ProfilesPage, ProfileDetailPage } from "./pages/control/ProfilesPage";
 import OperationsPage from "./pages/control/OperationsPage";
 import { useEffect, useState } from "react";
@@ -76,6 +77,9 @@ export default function App() {
         <Route path="/" component={OverviewPage} />
         <Route path="/installer" component={InstallerPage} />
         <Route path="/commands" component={CommandsPage} />
+        <Route path="/remote-jobs">
+          {() => <RemoteJobsPage user={user} />}
+        </Route>
         <Route path="/deployments/:id">
           {() => <DeploymentDetailPage user={user} />}
         </Route>
@@ -90,7 +94,7 @@ export default function App() {
         <Route path="/settings">
           <Redirect to="/profiles" replace />
         </Route>
-        <Route path="/users" component={UsersPage} />
+        <Route path="/users">{() => <UsersPage user={user} />}</Route>
         <Route path="/activity">
           <Redirect to="/operations?removed=activity" replace />
         </Route>

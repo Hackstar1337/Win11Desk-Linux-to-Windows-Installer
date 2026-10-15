@@ -1,0 +1,1494 @@
+/* Remote installations / Vengeance route layer.
+   Every new rule is scoped to a route root so the shell and shared tokens remain parent-owned. */
+.remote-vng-page {
+  --remote-violet: var(--primary, #a78bfa);
+  --remote-graphite: #0d0d13;
+  --remote-ink: #11111a;
+  --remote-panel: #15141f;
+  --remote-panel-raised: #1b1927;
+  --remote-line: rgba(191, 179, 229, 0.15);
+  --remote-line-strong: rgba(191, 179, 229, 0.28);
+  --remote-text: #f2effa;
+  --remote-muted: #9a96aa;
+  --remote-dim: #6f6b7c;
+  width: 100%;
+  min-width: 0;
+  color: var(--remote-text);
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.remote-vng-page h1,
+.remote-vng-page h2,
+.remote-vng-page h3,
+.remote-vng-page h4,
+.remote-vng-job-panel h2,
+.remote-vng-job-panel h3 {
+  font-family: "Space Grotesk", Inter, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.03em;
+}
+
+.remote-vng-page button,
+.remote-vng-page input,
+.remote-vng-job-panel button,
+.remote-vng-job-panel input {
+  font: inherit;
+}
+
+.remote-vng-page button:focus-visible,
+.remote-vng-page input:focus-visible,
+.remote-vng-job-panel button:focus-visible,
+.remote-vng-job-panel input:focus-visible,
+.remote-vng-page a:focus-visible,
+.remote-vng-job-panel a:focus-visible {
+  outline: 2px solid var(--remote-violet);
+  outline-offset: 3px;
+}
+
+.remote-vng-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+  padding: 6px 2px 26px;
+  border-bottom: 1px solid var(--remote-line);
+}
+
+.remote-vng-install-hero {
+  padding-bottom: 24px;
+}
+
+.remote-vng-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--remote-violet);
+  font:
+    600 10px/1.2 "SFMono-Regular",
+    Consolas,
+    monospace;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+.remote-vng-hero h1 {
+  max-width: 720px;
+  margin: 10px 0 9px;
+  color: var(--remote-text);
+  font-size: clamp(27px, 4vw, 46px);
+  font-weight: 600;
+  line-height: 1.04;
+}
+
+.remote-vng-hero p {
+  max-width: 670px;
+  margin: 0;
+  color: var(--remote-muted);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.remote-vng-hero-meta {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: 8px;
+  color: var(--remote-muted);
+  font:
+    10px/1.4 "SFMono-Regular",
+    Consolas,
+    monospace;
+  white-space: nowrap;
+}
+
+.remote-vng-hero-meta small {
+  display: block;
+  color: var(--remote-dim);
+  font: inherit;
+}
+
+.remote-vng-hero-meta-stack {
+  align-items: flex-end;
+  flex-direction: column;
+  text-align: right;
+}
+
+.remote-vng-live-dot,
+.remote-vng-protocol i {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #72d9a9;
+  box-shadow: 0 0 0 4px rgba(114, 217, 169, 0.1);
+}
+
+.remote-vng-protocol {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #c8bedf;
+}
+
+.remote-vng-overview {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.74fr) minmax(220px, 1fr);
+  gap: 14px;
+  margin: 22px 0 32px;
+}
+
+.remote-vng-count-card {
+  min-height: 145px;
+  border: 1px solid rgba(167, 139, 250, 0.22);
+  background: linear-gradient(
+    135deg,
+    rgba(29, 25, 48, 0.98),
+    rgba(17, 16, 25, 0.98)
+  ) !important;
+}
+
+.remote-vng-count-inner {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 110px;
+  padding: 4px 6px;
+}
+
+.remote-vng-card-label,
+.remote-vng-card-note {
+  color: #aaa3c2;
+  font:
+    10px/1.4 "SFMono-Regular",
+    Consolas,
+    monospace;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.remote-vng-card-note {
+  align-self: flex-end;
+  color: var(--remote-dim);
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.remote-vng-count-line {
+  align-self: center;
+  color: var(--remote-text);
+}
+
+.remote-vng-count {
+  font:
+    600 clamp(44px, 7vw, 78px) / 0.9 "Space Grotesk",
+    Inter,
+    sans-serif;
+  letter-spacing: -0.08em;
+}
+
+.remote-vng-loader {
+  transform: scale(0.2);
+  transform-origin: center;
+  color: var(--remote-violet) !important;
+}
+
+.remote-vng-signal-stack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.remote-vng-signal {
+  display: flex;
+  min-height: 145px;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 15px 16px;
+  border: 1px solid var(--remote-line);
+  border-radius: 15px;
+  background: linear-gradient(
+    155deg,
+    rgba(26, 25, 36, 0.98),
+    rgba(15, 15, 22, 0.98)
+  );
+}
+
+.remote-vng-signal > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--remote-muted);
+  font-size: 11px;
+}
+
+.remote-vng-signal strong {
+  color: var(--remote-text);
+  font:
+    500 34px/1 "Space Grotesk",
+    sans-serif;
+}
+
+.remote-vng-signal small {
+  color: var(--remote-dim);
+  font-size: 10px;
+}
+
+.remote-vng-signal-mark {
+  width: 6px;
+  height: 6px;
+  border-radius: 99px;
+  background: var(--remote-violet);
+}
+
+.remote-vng-signal-mark.is-amber {
+  background: #eab66e;
+}
+.remote-vng-signal-mark.is-violet {
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.8);
+}
+
+.remote-vng-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1.13fr) minmax(300px, 0.87fr);
+  align-items: start;
+  gap: 30px;
+}
+
+.remote-vng-list-column,
+.remote-vng-detail-column {
+  min-width: 0;
+}
+
+.remote-vng-detail-column {
+  position: sticky;
+  top: 18px;
+}
+
+.remote-vng-list-toolbar,
+.remote-vng-detail-header,
+.remote-vng-section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.remote-vng-list-toolbar {
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.remote-vng-list-toolbar h2 {
+  margin: 7px 0 0;
+  color: var(--remote-text);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.remote-vng-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.remote-vng-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(250px, 100%);
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--remote-line);
+  border-radius: 9px;
+  background: rgba(18, 17, 26, 0.92);
+  color: var(--remote-dim);
+}
+
+.remote-vng-search:focus-within {
+  border-color: var(--remote-violet);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+}
+
+.remote-vng-search input {
+  width: 100%;
+  min-width: 0;
+  padding: 7px 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--remote-text);
+  font-size: 11px;
+}
+
+.remote-vng-search input::placeholder {
+  color: var(--remote-dim);
+}
+
+.remote-vng-icon-action {
+  width: 36px;
+  min-height: 36px;
+  padding: 0 !important;
+  border-radius: 9px !important;
+  color: var(--remote-muted) !important;
+}
+
+.remote-vng-job-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.remote-vng-job-row {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto minmax(105px, auto);
+  align-items: center;
+  gap: 13px;
+  width: 100%;
+  min-height: 73px;
+  padding: 12px 13px;
+  border: 1px solid var(--remote-line);
+  border-radius: 12px;
+  background: rgba(20, 19, 29, 0.82);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    transform 180ms ease;
+}
+
+.remote-vng-job-row:hover,
+.remote-vng-job-row.is-selected {
+  border-color: rgba(167, 139, 250, 0.52);
+  background: linear-gradient(
+    90deg,
+    rgba(37, 30, 56, 0.86),
+    rgba(20, 19, 29, 0.94)
+  );
+}
+
+.remote-vng-job-row:hover {
+  transform: translateX(3px);
+}
+.remote-vng-row-index {
+  color: var(--remote-dim);
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-row-primary {
+  min-width: 0;
+}
+.remote-vng-row-primary strong,
+.remote-vng-row-primary small {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.remote-vng-row-primary strong {
+  color: var(--remote-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+.remote-vng-row-primary small {
+  margin-top: 5px;
+  color: var(--remote-muted);
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-row-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--remote-dim);
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+  white-space: nowrap;
+}
+.remote-vng-row-time svg {
+  color: var(--remote-violet);
+}
+
+.remote-vng-state {
+  gap: 6px;
+  min-height: 24px;
+  padding: 4px 8px;
+  border-radius: 99px;
+  border-color: var(--remote-line-strong) !important;
+  color: var(--remote-muted) !important;
+  font-size: 9px;
+  line-height: 1;
+  text-transform: capitalize;
+}
+.remote-vng-state i {
+  width: 5px;
+  height: 5px;
+  border-radius: 99px;
+  background: currentColor;
+}
+.remote-vng-state-large {
+  min-height: 30px;
+  padding: 6px 10px;
+  font-size: 10px;
+}
+.remote-state-handed_off.remote-vng-state {
+  color: #78d7a8 !important;
+  border-color: rgba(120, 215, 168, 0.35) !important;
+}
+.remote-state-queued.remote-vng-state,
+.remote-state-connecting.remote-vng-state,
+.remote-state-checking.remote-vng-state,
+.remote-state-sending.remote-vng-state,
+.remote-state-launching.remote-vng-state {
+  color: var(--remote-violet) !important;
+  border-color: rgba(167, 139, 250, 0.36) !important;
+}
+.remote-state-blocked.remote-vng-state,
+.remote-state-connection_failed.remote-vng-state,
+.remote-state-launch_uncertain.remote-vng-state,
+.remote-state-cancelled.remote-vng-state {
+  color: #e99aab !important;
+  border-color: rgba(233, 154, 171, 0.36) !important;
+}
+
+.remote-vng-selection-note,
+.remote-vng-locked,
+.remote-vng-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 255px;
+  padding: 25px;
+  border: 1px dashed var(--remote-line-strong);
+  border-radius: 16px;
+  background: rgba(18, 17, 26, 0.58);
+}
+.remote-vng-selection-note h2 {
+  margin: 12px 0 8px;
+  font-size: 24px;
+  font-weight: 500;
+}
+.remote-vng-selection-note p,
+.remote-vng-empty p,
+.remote-vng-locked p {
+  max-width: 390px;
+  margin: 0;
+  color: var(--remote-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.remote-vng-mini-rail {
+  display: flex;
+  gap: 6px;
+  margin-top: 26px;
+  color: var(--remote-dim);
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-mini-rail span {
+  padding: 5px 7px;
+  border: 1px solid var(--remote-line);
+  border-radius: 5px;
+}
+.remote-vng-empty {
+  align-items: center;
+  min-height: 180px;
+  text-align: center;
+}
+.remote-vng-empty strong {
+  margin-top: 12px;
+  color: var(--remote-text);
+  font-size: 12px;
+}
+.remote-vng-empty p {
+  margin-top: 5px;
+}
+.remote-vng-loading {
+  border-style: solid;
+}
+.remote-vng-locked {
+  align-items: flex-start;
+  min-height: 250px;
+  background: linear-gradient(
+    140deg,
+    rgba(35, 29, 51, 0.82),
+    rgba(18, 17, 26, 0.68)
+  );
+}
+.remote-vng-locked > svg {
+  margin: 21px 0 15px;
+  color: var(--remote-violet);
+}
+.remote-vng-locked strong {
+  color: var(--remote-text);
+  font:
+    500 21px "Space Grotesk",
+    sans-serif;
+}
+.remote-vng-message {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 12px 0;
+  border-radius: 10px;
+}
+.remote-vng-loading-screen {
+  display: grid;
+  min-height: 220px;
+  place-items: center;
+  align-content: center;
+  gap: 7px;
+  color: var(--remote-muted);
+}
+
+/* Installer workbench */
+.remote-vng-install-layout {
+  display: grid;
+  grid-template-columns: 165px minmax(0, 1fr);
+  align-items: start;
+  gap: 25px;
+  padding-top: 24px;
+}
+.remote-vng-workflow-rail {
+  position: sticky;
+  top: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 6px 0;
+}
+.remote-vng-workflow-step {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 9px;
+  min-height: 58px;
+  padding: 8px 8px 8px 0;
+  border-left: 1px solid var(--remote-line);
+  opacity: 0.52;
+  transition:
+    opacity 180ms ease,
+    border-color 180ms ease;
+}
+.remote-vng-workflow-step > span {
+  padding-left: 12px;
+  color: var(--remote-dim);
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-workflow-step strong {
+  display: block;
+  color: var(--remote-muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+.remote-vng-workflow-step small {
+  display: block;
+  margin-top: 4px;
+  color: var(--remote-dim);
+  font-size: 9px;
+  line-height: 1.35;
+}
+.remote-vng-workflow-step.is-reached {
+  opacity: 0.86;
+  border-color: rgba(167, 139, 250, 0.38);
+}
+.remote-vng-workflow-step.is-active {
+  opacity: 1;
+  border-color: var(--remote-violet);
+  background: linear-gradient(90deg, rgba(49, 39, 73, 0.34), transparent);
+}
+.remote-vng-workflow-step.is-active > span,
+.remote-vng-workflow-step.is-active strong {
+  color: var(--remote-violet);
+}
+.remote-vng-rail-boundary {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+  padding: 12px 8px;
+  border-top: 1px solid var(--remote-line);
+  color: var(--remote-dim);
+  font-size: 9px;
+  line-height: 1.5;
+}
+.remote-vng-rail-boundary svg {
+  flex: none;
+  color: #78d7a8;
+}
+.remote-vng-install-body {
+  min-width: 0;
+  gap: 14px;
+  padding: 0 0 20px;
+}
+.remote-vng-section-intro {
+  padding: 2px 2px 5px;
+}
+.remote-vng-section-intro h2 {
+  margin: 8px 0 6px;
+  color: var(--remote-text);
+  font-size: 25px;
+  font-weight: 500;
+}
+.remote-vng-section-intro p {
+  max-width: 680px;
+  margin: 0;
+  color: var(--remote-muted);
+  font-size: 12px;
+  line-height: 1.65;
+}
+.remote-vng-section,
+.remote-vng-job-panel,
+.remote-vng-submitted {
+  min-width: 0;
+  padding: 19px;
+  border: 1px solid var(--remote-line);
+  border-radius: 15px;
+  background: linear-gradient(
+    145deg,
+    rgba(24, 23, 34, 0.96),
+    rgba(16, 16, 23, 0.96)
+  );
+}
+.remote-vng-section-heading {
+  align-items: flex-start;
+  margin-bottom: 17px;
+}
+.remote-vng-section-heading > div:first-child {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+}
+.remote-vng-section-number {
+  display: inline-grid;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  place-items: center;
+  border: 1px solid rgba(167, 139, 250, 0.38);
+  border-radius: 7px;
+  color: var(--remote-violet);
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-section-number.is-danger {
+  color: #ed9eaf;
+  border-color: rgba(237, 158, 175, 0.46);
+}
+.remote-vng-section h3 {
+  margin: 0 0 5px;
+  color: var(--remote-text);
+  font-size: 15px;
+  font-weight: 600;
+}
+.remote-vng-section-heading p {
+  max-width: 650px;
+  margin: 0;
+  color: var(--remote-muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.remote-vng-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  padding: 5px 8px;
+  border: 1px solid var(--remote-line-strong);
+  border-radius: 99px;
+  color: var(--remote-muted);
+  font:
+    9px "SFMono-Regular",
+    Consolas,
+    monospace;
+  white-space: nowrap;
+}
+.remote-vng-chip.is-success {
+  color: #78d7a8;
+  border-color: rgba(120, 215, 168, 0.38);
+}
+.remote-vng-grid {
+  gap: 13px;
+}
+.remote-vng-page .field {
+  min-width: 0;
+}
+.remote-vng-page .field > span {
+  color: #b8b1ca;
+  font-size: 10px;
+}
+.remote-vng-page .field input {
+  min-height: 37px;
+  border-color: var(--remote-line);
+  border-radius: 8px;
+  background: rgba(12, 12, 18, 0.75);
+  color: var(--remote-text);
+  font-size: 12px;
+}
+.remote-vng-page .field input:hover {
+  border-color: var(--remote-line-strong);
+}
+.remote-vng-page .field input:focus {
+  border-color: var(--remote-violet);
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+}
+.remote-vng-action-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 14px;
+}
+.remote-vng-action {
+  min-height: 35px;
+  gap: 7px;
+  padding: 8px 13px !important;
+  border-radius: 8px !important;
+  font-size: 11px !important;
+}
+.remote-vng-action svg {
+  flex: none;
+}
+.remote-vng-page .primary-button.remote-vng-action {
+  border-color: rgba(167, 139, 250, 0.55);
+  background: #8064ca;
+  color: #fff;
+}
+.remote-vng-page .secondary-button.remote-vng-action {
+  border-color: var(--remote-line-strong);
+  background: #201e2c;
+  color: #e7e1f4;
+}
+.remote-inline-note {
+  color: var(--remote-dim);
+  font:
+    10px/1.45 "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-fingerprint {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  min-height: 0;
+  margin-top: 15px;
+  padding: 14px;
+  border-color: rgba(167, 139, 250, 0.32);
+  background: rgba(19, 17, 29, 0.96) !important;
+}
+.remote-vng-fingerprint > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.remote-vng-fingerprint code {
+  overflow-wrap: anywhere;
+  color: #d6cafa;
+  font:
+    11px/1.5 "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: var(--remote-muted);
+  font-size: 11px;
+  line-height: 1.45;
+}
+.remote-vng-check-row input {
+  flex: none;
+  margin-top: 2px;
+  accent-color: var(--remote-violet);
+}
+.remote-vng-split-sections {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(220px, 0.85fr);
+  gap: 14px;
+}
+.remote-vng-settings-card {
+  height: 100%;
+}
+.remote-vng-settings-summary {
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+.remote-vng-settings-summary span {
+  padding: 10px 11px;
+  border-color: var(--remote-line);
+  border-radius: 8px;
+  background: rgba(11, 11, 17, 0.36);
+  color: var(--remote-muted);
+  font-size: 10px;
+}
+.remote-vng-settings-summary b {
+  color: #b8b1ca;
+  font:
+    9px "SFMono-Regular",
+    Consolas,
+    monospace;
+  letter-spacing: 0.06em;
+}
+.remote-vng-scope-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  height: fit-content;
+  padding: 15px;
+  border: 1px solid rgba(120, 215, 168, 0.19);
+  border-radius: 13px;
+  background: rgba(29, 56, 47, 0.18);
+  color: #78d7a8;
+}
+.remote-vng-scope-note strong {
+  display: block;
+  color: #b9e7d2;
+  font-size: 11px;
+}
+.remote-vng-scope-note p {
+  margin: 6px 0 0;
+  color: #95b7aa;
+  font-size: 10px;
+  line-height: 1.55;
+}
+.remote-vng-facts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+.remote-vng-facts > div {
+  padding: 10px;
+  border-color: var(--remote-line);
+  border-radius: 8px;
+  background: rgba(10, 10, 16, 0.3);
+}
+.remote-vng-facts dt {
+  color: var(--remote-dim);
+  font:
+    9px "SFMono-Regular",
+    Consolas,
+    monospace;
+  letter-spacing: 0.04em;
+}
+.remote-vng-facts dd {
+  margin-top: 6px;
+  color: #ddd8e7;
+  font-size: 11px;
+  line-height: 1.42;
+}
+.remote-vng-mono {
+  overflow-wrap: anywhere;
+  font-family: "SFMono-Regular", Consolas, monospace !important;
+}
+.remote-vng-check-result {
+  border-color: rgba(120, 215, 168, 0.28);
+}
+.remote-vng-review-card {
+  min-height: 0;
+  padding: 19px !important;
+  border-color: rgba(233, 154, 171, 0.33);
+  background: linear-gradient(
+    145deg,
+    rgba(39, 26, 38, 0.98),
+    rgba(19, 15, 24, 0.98)
+  ) !important;
+}
+.remote-vng-review-card > div {
+  align-items: stretch;
+}
+.remote-vng-review-digest {
+  flex: none;
+  color: #c39aab;
+  font:
+    9px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-confirmations {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin: 16px 0 13px;
+}
+.remote-vng-confirmations .checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  color: #d0bdc8;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.remote-vng-confirmations input {
+  flex: none;
+  margin-top: 2px;
+  accent-color: #d8869a;
+}
+.remote-vng-destructive-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  margin-bottom: 13px;
+  padding: 10px;
+  border: 1px solid rgba(234, 182, 110, 0.24);
+  border-radius: 8px;
+  background: rgba(83, 59, 27, 0.2);
+  color: #eac18b;
+  font-size: 10px;
+  line-height: 1.45;
+}
+.remote-vng-launch {
+  border-color: rgba(231, 132, 153, 0.54) !important;
+  background: #a64f67 !important;
+  color: #fff !important;
+}
+.remote-vng-busy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--remote-violet);
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-footnote {
+  margin: 0;
+  color: var(--remote-dim);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.remote-vng-submitted {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 13px;
+}
+.remote-vng-submitted h3 {
+  margin: 7px 0 4px;
+  font-size: 15px;
+}
+.remote-vng-submitted p {
+  margin: 0;
+  color: var(--remote-muted);
+  font-size: 10px;
+}
+.remote-vng-submitted > .remote-vng-job-panel {
+  grid-column: 1 / -1;
+}
+.remote-vng-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--remote-violet);
+  font-size: 11px;
+}
+
+/* Job detail, also works when mounted directly on Commands or after submit. */
+.remote-vng-job-panel {
+  background: linear-gradient(
+    145deg,
+    rgba(24, 23, 34, 0.98),
+    rgba(14, 14, 21, 0.98)
+  );
+}
+.remote-vng-detail-header {
+  align-items: flex-start;
+  margin-bottom: 19px;
+}
+.remote-vng-detail-header h2 {
+  margin: 8px 0 6px;
+  color: var(--remote-text);
+  font-size: 23px;
+  font-weight: 500;
+}
+.remote-vng-detail-header p {
+  margin: 0;
+  color: var(--remote-muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.remote-vng-rail {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 5px;
+  margin-bottom: 18px;
+}
+.remote-vng-rail-step {
+  min-width: 0;
+  padding: 9px 7px;
+  border-top: 1px solid var(--remote-line);
+  opacity: 0.55;
+}
+.remote-vng-rail-step.is-active {
+  border-color: var(--remote-violet);
+  opacity: 1;
+}
+.remote-vng-rail-step.is-complete {
+  border-color: rgba(120, 215, 168, 0.62);
+  opacity: 0.9;
+}
+.remote-vng-rail-number {
+  display: block;
+  color: var(--remote-dim);
+  font:
+    9px "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+.remote-vng-rail-step.is-active .remote-vng-rail-number {
+  color: var(--remote-violet);
+}
+.remote-vng-rail-step.is-complete .remote-vng-rail-number {
+  color: #78d7a8;
+}
+.remote-vng-rail-copy strong {
+  display: block;
+  margin-top: 7px;
+  overflow: hidden;
+  color: var(--remote-muted);
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.remote-vng-rail-copy small {
+  display: block;
+  margin-top: 4px;
+  color: var(--remote-dim);
+  font-size: 9px;
+  line-height: 1.35;
+}
+.remote-vng-boundary {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 14px 0;
+  padding: 11px;
+  border: 1px solid rgba(120, 215, 168, 0.2);
+  border-radius: 9px;
+  background: rgba(29, 56, 47, 0.14);
+  color: #78d7a8;
+}
+.remote-vng-boundary.is-caution {
+  border-color: rgba(234, 182, 110, 0.28);
+  background: rgba(83, 59, 27, 0.16);
+  color: #eac18b;
+}
+.remote-vng-boundary p {
+  margin: 0;
+  color: #a9bdb4;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.remote-vng-reconcile {
+  margin-top: 15px;
+  padding: 13px;
+  border-color: rgba(234, 182, 110, 0.34);
+  border-radius: 10px;
+  background: rgba(83, 59, 27, 0.18);
+}
+.remote-vng-reconcile-heading {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: #eac18b;
+}
+.remote-vng-reconcile-heading strong {
+  color: #f1d19f;
+  font-size: 11px;
+}
+.remote-vng-reconcile-heading p {
+  margin: 5px 0 11px;
+  color: #c8af8a;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.remote-vng-reconcile .field {
+  max-width: 320px;
+  margin-bottom: 10px;
+}
+.remote-vng-events {
+  margin-top: 18px;
+  padding-top: 15px;
+  border-top: 1px solid var(--remote-line);
+}
+.remote-vng-events-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 9px;
+  color: var(--remote-dim);
+}
+.remote-vng-events-heading h3 {
+  margin: 7px 0 0;
+  color: var(--remote-text);
+  font-size: 14px;
+  font-weight: 500;
+}
+.remote-vng-events ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.remote-vng-events li {
+  display: grid;
+  grid-template-columns: 9px minmax(0, 1fr) auto;
+  gap: 9px;
+  align-items: start;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(191, 179, 229, 0.09);
+}
+.remote-vng-event-marker {
+  width: 6px;
+  height: 6px;
+  margin-top: 5px;
+  border: 1px solid var(--remote-violet);
+  border-radius: 99px;
+}
+.remote-vng-event-copy strong,
+.remote-vng-event-copy span {
+  display: block;
+}
+.remote-vng-event-copy strong {
+  color: #cfc8dc;
+  font:
+    10px "SFMono-Regular",
+    Consolas,
+    monospace;
+  text-transform: capitalize;
+}
+.remote-vng-event-copy span {
+  margin-top: 4px;
+  color: var(--remote-muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.remote-vng-events time {
+  color: var(--remote-dim);
+  font:
+    9px "SFMono-Regular",
+    Consolas,
+    monospace;
+  white-space: nowrap;
+}
+.remote-vng-spin {
+  animation: remote-vng-spin 0.85s linear infinite;
+}
+@keyframes remote-vng-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Compatibility hooks for the adjacent worker-health module. */
+.remote-worker-health {
+  width: 100%;
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--remote-line);
+  border-radius: 14px;
+  background: var(--remote-panel);
+  color: var(--remote-text);
+}
+.remote-worker-health h3 {
+  margin: 0 0 6px;
+  color: var(--remote-text);
+}
+.remote-worker-health .remote-section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 13px;
+}
+.remote-worker-health .remote-section-heading p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--remote-muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.remote-worker-health .remote-message {
+  margin-top: 10px;
+  padding: 10px 11px;
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  border-radius: 8px;
+  background: rgba(167, 139, 250, 0.08);
+  color: #d6cafa;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.remote-worker-health .remote-message.is-error {
+  border-color: rgba(233, 154, 171, 0.4);
+  background: rgba(95, 38, 54, 0.24);
+  color: #f4b7c4;
+}
+.remote-worker-health .remote-muted {
+  color: var(--remote-muted);
+  font-size: 10px;
+  line-height: 1.55;
+}
+.remote-worker-health .remote-health-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0;
+}
+.remote-worker-health .remote-health-grid > div {
+  min-width: 0;
+  padding: 9px;
+  border: 1px solid var(--remote-line);
+  border-radius: 8px;
+}
+.remote-worker-health .remote-health-grid dt {
+  margin-bottom: 4px;
+  color: var(--remote-dim);
+  font:
+    9px "SFMono-Regular",
+    Consolas,
+    monospace;
+  text-transform: uppercase;
+}
+.remote-worker-health .remote-health-grid dd {
+  margin: 0;
+  color: #d6d0df;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 980px) {
+  .remote-vng-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .remote-vng-detail-column {
+    position: static;
+  }
+  .remote-vng-install-layout {
+    grid-template-columns: 1fr;
+  }
+  .remote-vng-workflow-rail {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 5px;
+  }
+  .remote-vng-workflow-rail > .remote-vng-kicker {
+    grid-column: 1 / -1;
+  }
+  .remote-vng-workflow-step {
+    display: block;
+    min-height: 0;
+    padding: 9px 8px;
+    border-top: 1px solid var(--remote-line);
+    border-left: 0;
+  }
+  .remote-vng-workflow-step > span {
+    display: block;
+    padding: 0;
+  }
+  .remote-vng-workflow-step > div {
+    margin-top: 7px;
+  }
+  .remote-vng-rail-boundary {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .remote-vng-hero {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
+    padding-bottom: 19px;
+  }
+  .remote-vng-hero-meta-stack {
+    align-items: flex-start;
+    text-align: left;
+  }
+  .remote-vng-overview {
+    grid-template-columns: 1fr;
+    margin: 17px 0 23px;
+  }
+  .remote-vng-count-card,
+  .remote-vng-signal {
+    min-height: 120px;
+  }
+  .remote-vng-signal-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .remote-vng-list-toolbar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .remote-vng-list-actions {
+    width: 100%;
+  }
+  .remote-vng-search {
+    flex: 1;
+    width: auto;
+  }
+  .remote-vng-job-row {
+    grid-template-columns: 22px minmax(0, 1fr) auto;
+    gap: 9px;
+  }
+  .remote-vng-row-time {
+    grid-column: 2 / -1;
+  }
+  .remote-vng-row-time svg {
+    display: none;
+  }
+  .remote-vng-state {
+    justify-self: end;
+  }
+  .remote-vng-section-heading,
+  .remote-vng-detail-header {
+    flex-direction: column;
+  }
+  .remote-vng-chip,
+  .remote-vng-review-digest,
+  .remote-vng-state-large {
+    align-self: flex-start;
+  }
+  .remote-vng-split-sections {
+    grid-template-columns: 1fr;
+  }
+  .remote-vng-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .remote-vng-submitted {
+    grid-template-columns: 1fr;
+  }
+  .remote-vng-inline-link {
+    justify-self: start;
+  }
+  .remote-vng-rail-copy small {
+    display: none;
+  }
+}
+
+@media (max-width: 500px) {
+  .remote-vng-page {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .remote-vng-hero h1 {
+    font-size: 29px;
+  }
+  .remote-vng-signal-stack {
+    gap: 7px;
+  }
+  .remote-vng-signal {
+    padding: 12px;
+  }
+  .remote-vng-signal strong {
+    font-size: 28px;
+  }
+  .remote-vng-workflow-rail {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  .remote-vng-workflow-step {
+    padding: 8px 5px;
+  }
+  .remote-vng-workflow-step strong {
+    font-size: 9px;
+  }
+  .remote-vng-workflow-step small {
+    font-size: 8px;
+  }
+  .remote-vng-section,
+  .remote-vng-job-panel,
+  .remote-vng-review-card,
+  .remote-vng-submitted {
+    padding: 14px !important;
+    border-radius: 11px;
+  }
+  .remote-vng-grid,
+  .remote-vng-facts {
+    grid-template-columns: 1fr;
+  }
+  .remote-vng-rail {
+    gap: 2px;
+  }
+  .remote-vng-rail-step {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+  .remote-vng-rail-copy strong {
+    font-size: 9px;
+  }
+  .remote-vng-events li {
+    grid-template-columns: 9px minmax(0, 1fr);
+  }
+  .remote-vng-events time {
+    grid-column: 2;
+  }
+  .remote-worker-health .remote-health-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .remote-vng-page *,
+  .remote-vng-job-panel * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
+  .remote-vng-job-row:hover {
+    transform: none;
+  }
+}
+
+/* A glow card's default content is a row: review sections must instead flow vertically. */
+.remote-vng-review-card > div:last-child {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 0;
+  padding: 0;
+}
+.remote-vng-facts {
+  display: grid;
+  margin: 0;
+  min-width: 0;
+}
+.remote-vng-facts > div {
+  min-width: 0;
+}
+.remote-vng-facts dd {
+  margin-left: 0;
+  overflow-wrap: anywhere;
+}
+.remote-vng-review-card .remote-vng-section-heading {
+  width: 100%;
+}
+.remote-vng-review-card .remote-vng-section-heading > div:first-child {
+  min-width: 0;
+}
+.remote-vng-review-card .remote-vng-launch {
+  width: auto;
+  min-width: 160px;
+  max-width: 100%;
+  min-height: 42px;
+  height: auto;
+  white-space: normal;
+}
+@media (max-width: 500px) {
+  .remote-vng-review-card .remote-vng-launch {
+    width: 100%;
+  }
+}

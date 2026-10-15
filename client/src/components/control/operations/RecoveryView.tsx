@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Download, FileCheck2, LockKeyhole } from "lucide-react";
+import { Download, FileCheck2, LockKeyhole, RefreshCw } from "lucide-react";
 import type { User } from "../api";
 import { api, downloadApiFile, formatDate } from "../api";
 import { StepUpModal } from "../../../pages/control/ControlPages";
-
 import type { OperationsHealth } from "@shared/operationsDashboard";
+
 interface Props {
   user: User;
   health: OperationsHealth | null;
@@ -27,11 +27,10 @@ const guideItems = [
   [
     "backup",
     "Backup guide",
-    "Download the bounded control-plane backup procedure.",
+    "Download the backup procedure for this service.",
   ],
   ["restore", "Restore guide", "Download the restore verification procedure."],
 ] as const;
-
 function text(value: unknown) {
   return typeof value === "string" ? value : value == null ? "" : String(value);
 }
@@ -110,14 +109,6 @@ export default function RecoveryView({
   const canManage = user.role === "owner" || user.role === "admin";
   const requests = useRef<AbortController | null>(null);
   const active = useRef(false);
-  useEffect(() => {
-    active.current = true;
-    requests.current = new AbortController();
-    return () => {
-      active.current = false;
-      requests.current?.abort();
-    };
-  }, []);
   const [advanced, setAdvanced] = useState(false);
   const [stepUp, setStepUp] = useState(false);
   const [group, setGroup] = useState("");
@@ -128,7 +119,14 @@ export default function RecoveryView({
   const [loadingDiagnostics, setLoadingDiagnostics] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
-
+  useEffect(() => {
+    active.current = true;
+    requests.current = new AbortController();
+    return () => {
+      active.current = false;
+      requests.current?.abort();
+    };
+  }, []);
   useEffect(() => {
     const clear = () => {
       if (document.hidden) {
@@ -146,6 +144,7 @@ export default function RecoveryView({
   }
   async function getDiagnostics() {
     setLoadingDiagnostics(true);
+    setMessage("");
     setError("");
     try {
       const result = await api("/api/admin/operations/diagnostics", {
@@ -153,15 +152,18 @@ export default function RecoveryView({
       });
       if (active.current) setDiagnostics(previewDiagnostics(result));
     } catch (reason) {
-      if (!active.current) return;
-      setError(
-        reason instanceof Error ? reason.message : "Unable to load diagnostics."
-      );
+      if (active.current)
+        setError(
+          reason instanceof Error
+            ? reason.message
+            : "Unable to load diagnostics."
+        );
     } finally {
       if (active.current) setLoadingDiagnostics(false);
     }
   }
   async function downloadGuide(kind: string, filename: string) {
+    setMessage("");
     setError("");
     try {
       await downloadApiFile(
@@ -171,14 +173,15 @@ export default function RecoveryView({
         filename,
         requests.current?.signal
       );
-      if (!active.current) return;
-      setMessage(`${filename} downloaded.`);
+      if (active.current) setMessage(`${filename} downloaded.`);
     } catch (reason) {
-      if (!active.current) return;
-      setError(reason instanceof Error ? reason.message : "Download failed.");
+      if (active.current)
+        setError(reason instanceof Error ? reason.message : "Download failed.");
     }
   }
   async function importLegacy() {
+    setMessage("");
+    setError("");
     try {
       const result = await api<{ imported?: number; skipped?: number }>(
         "/api/admin/legacy-import",
@@ -192,15 +195,15 @@ export default function RecoveryView({
           }),
         }
       );
-      if (!active.current) return;
-      setMessage(
-        `Legacy import finished: ${result.imported ?? 0} added, ${result.skipped ?? 0} skipped.`
-      );
+      if (active.current)
+        setMessage(
+          `Legacy import finished: ${result.imported ?? 0} added, ${result.skipped ?? 0} skipped.`
+        );
     } catch (reason) {
-      if (!active.current) return;
-      setError(
-        reason instanceof Error ? reason.message : "Legacy import failed."
-      );
+      if (active.current)
+        setError(
+          reason instanceof Error ? reason.message : "Legacy import failed."
+        );
     } finally {
       if (active.current) {
         setToken("");
@@ -209,30 +212,44 @@ export default function RecoveryView({
     }
   }
   return (
-    <section className="ops-panel" aria-labelledby="operations-recovery-title">
-      <div className="ops-panel-heading">
+    <section
+      className="ops-panel ops-vng-panel ops-recovery"
+      aria-labelledby="operations-recovery-title"
+    >
+      <div className="ops-panel-heading ops-vng-heading">
         <div>
-          <h2 id="operations-recovery-title">Recovery & evidence</h2>
+          <span className="ops-vng-section-no">03 / RECOVER</span>
+          <h2 id="operations-recovery-title">Recovery &amp; evidence</h2>
           <p>
-            Download procedures and inspect bounded diagnostic evidence.
-            Recovery actions never show secrets or raw logs.
+            Procedures and selected records for safe review. No secrets, raw logs,
+            or unrestricted restore controls.
           </p>
         </div>
+        <div className="ops-vng-readonly">READ-ONLY BY DEFAULT</div>
       </div>
-      <div className="ops-subheading">
-        <h3>Backup & restore evidence</h3>
+      <div className="ops-subheading ops-vng-subheading">
+        <div>
+          <h3>Backup &amp; restore evidence</h3>
+          <p>
+            Evidence is only reported when a fixed-path host manifest provides
+            it.
+          </p>
+        </div>
         <button
-          className="secondary-button"
+          className="secondary-button ops-vng-button"
           onClick={reloadHealth}
           disabled={healthLoading}
         >
+          <RefreshCw size={14} className={healthLoading ? "ops-spin" : ""} />{" "}
           Refresh evidence
         </button>
       </div>
       {healthError && (
-        <p className="ops-inline-error">Evidence unavailable: {healthError}</p>
+        <p className="ops-inline-error ops-vng-inline" role="alert">
+          Evidence unavailable: {healthError}
+        </p>
       )}
-      <dl className="ops-facts">
+      <dl className="ops-facts ops-vng-facts ops-recovery-facts">
         <div className="ops-fact">
           <dt>Latest backup attempt</dt>
           <dd>
@@ -267,7 +284,7 @@ export default function RecoveryView({
         </div>
       </dl>
       {error && (
-        <div className="ops-inline-error" role="alert">
+        <div className="ops-inline-error ops-vng-inline" role="alert">
           <span>{error}</span>
           <button
             className="text-button"
@@ -279,20 +296,21 @@ export default function RecoveryView({
         </div>
       )}
       {message && (
-        <div className="ops-inline-success" role="status">
+        <div className="ops-inline-success ops-vng-inline" role="status">
           {message}
         </div>
       )}
-      <div className="ops-guide-list">
-        {guideItems.map(([kind, title, description]) => (
+      <div className="ops-guide-list ops-vng-guides">
+        {guideItems.map(([kind, title, description], index) => (
           <div className="ops-guide" key={kind}>
+            <span className="ops-vng-guide-index">0{index + 1}</span>
             <FileCheck2 size={16} />
             <div>
               <strong>{title}</strong>
               <span>{description}</span>
             </div>
             <button
-              className="secondary-button"
+              className="secondary-button ops-vng-button"
               type="button"
               onClick={() =>
                 void downloadGuide(kind, `win11desk-${kind}-guide.json`)
@@ -304,27 +322,26 @@ export default function RecoveryView({
         ))}
       </div>
       {canManage && (
-        <div className="ops-diagnostics">
-          <div className="ops-subheading">
+        <div className="ops-diagnostics ops-vng-inset">
+          <div className="ops-subheading ops-vng-subheading">
             <div>
-              <h3>Diagnostics snapshot</h3>
+              <h3>Diagnostics summary</h3>
               <p>
-                Preview is intentionally limited to versions, check states,
-                counts, and safe failure codes.
+                Versions, check results, counts, and safe failure codes only.
               </p>
             </div>
             <button
-              className="secondary-button"
+              className="secondary-button ops-vng-button"
               type="button"
               onClick={() => void getDiagnostics()}
               disabled={loadingDiagnostics}
             >
-              {loadingDiagnostics ? "Loading…" : "Load preview"}
+              {loadingDiagnostics ? "Loading…" : "Load summary"}
             </button>
           </div>
           {diagnostics && (
             <div className="ops-diagnostic-preview">
-              <dl className="ops-facts">
+              <dl className="ops-facts ops-vng-facts">
                 <div className="ops-fact ops-fact-stack">
                   <dt>Versions</dt>
                   <dd>
@@ -398,7 +415,7 @@ export default function RecoveryView({
       )}
       {canManage && (
         <details
-          className="ops-advanced"
+          className="ops-advanced ops-vng-inset"
           open={advanced}
           onToggle={event => {
             const open = (event.currentTarget as HTMLDetailsElement).open;
@@ -409,14 +426,14 @@ export default function RecoveryView({
             }
           }}
         >
-          <summary>Advanced: import a local legacy tracker</summary>
+          <summary>Advanced: import records from a local tracker</summary>
           {advanced && (
             <div className="ops-advanced-body">
               <div className="ops-advanced-note">
                 <LockKeyhole size={15} />
                 <span>
                   Owner/admin only. This uses the existing local tracker
-                  endpoint; it never contacts a caller-supplied URL or displays
+                  endpoint; it never contacts a URL supplied here or displays
                   credentials.
                 </span>
               </div>
@@ -437,7 +454,7 @@ export default function RecoveryView({
                   />
                 </label>
                 <label className="field">
-                  <span>Private tracker read token (after #)</span>
+                  <span>Private tracker access token (after #)</span>
                   <input
                     type="password"
                     value={token}
@@ -445,6 +462,9 @@ export default function RecoveryView({
                     required
                     autoComplete="off"
                   />
+                  <small>
+                    Cleared when the page is hidden or the flow ends.
+                  </small>
                 </label>
                 <div className="ops-form-actions">
                   <button
@@ -461,7 +481,7 @@ export default function RecoveryView({
               </form>
               <StepUpModal
                 open={stepUp}
-                title="Authorize legacy import"
+                title="Authorize record import"
                 onCancel={() => {
                   setStepUp(false);
                   setToken("");

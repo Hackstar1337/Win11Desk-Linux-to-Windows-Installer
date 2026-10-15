@@ -1,0 +1,185 @@
+.post-install-options {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  min-width: 0;
+  background: var(--surface-2);
+}
+.post-option-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.post-option-heading > div {
+  min-width: 0;
+}
+.post-option-heading strong {
+  font-size: 13px;
+}
+.post-option-heading p {
+  font-size: 11px;
+  color: var(--muted);
+  margin: 5px 0 0;
+  line-height: 1.6;
+}
+.post-switch {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  white-space: nowrap;
+  font-size: 12px;
+  cursor: pointer;
+}
+.post-install-options .post-switch input[type="checkbox"] {
+  appearance: none;
+  flex: 0 0 34px;
+  padding: 0;
+  margin: 0;
+  width: 34px;
+  height: 19px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  position: relative;
+  cursor: pointer;
+}
+.post-install-options .post-switch input[type="checkbox"]:before {
+  content: "";
+  position: absolute;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--muted);
+  left: 3px;
+  top: 3px;
+  transition: transform 0.12s ease;
+}
+.post-install-options .post-switch input[type="checkbox"]:checked {
+  border-color: var(--primary);
+}
+.post-install-options .post-switch input[type="checkbox"]:checked:before {
+  background: var(--primary);
+  transform: translateX(15px);
+}
+.post-install-options .post-switch input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+.post-install-options .post-switch input[type="checkbox"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.post-file-choices {
+  display: grid;
+  gap: 12px;
+  margin-top: 14px;
+}
+.post-app-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.post-app-choice {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-size: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+.post-app-choice.selected {
+  border-color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+.app-letter {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border-radius: 7px;
+  background: var(--surface);
+  font-weight: 700;
+  font-size: 12px;
+}
+.app-chrome {
+  color: #f3cd53;
+}
+.app-firefox {
+  color: #fb9b4b;
+}
+.app-edge {
+  color: #5abcea;
+}
+.app-brave {
+  color: #ff9868;
+}
+.app-7zip {
+  color: var(--foreground);
+}
+.post-script-option {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin-top: 14px;
+}
+.post-install-results {
+  padding: 20px;
+  min-width: 0;
+}
+.post-result-heading,
+.post-script-result {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.post-result-heading {
+  margin: 12px 0;
+}
+.post-install-results small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.post-script-result {
+  padding: 15px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 12px;
+  font-size: 12px;
+}
+.post-script-result > div {
+  display: grid;
+  gap: 5px;
+}
+@media (max-width: 600px) {
+  .post-install-options {
+    padding: 12px;
+  }
+  .post-option-heading {
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .post-app-choice {
+    padding: 7px 8px;
+    font-size: 11px;
+  }
+  .post-install-results {
+    padding: 16px;
+  }
+  .post-result-heading,
+  .post-script-result {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .post-install-options .post-switch input[type="checkbox"]:before {
+    transition: none;
+  }
+}

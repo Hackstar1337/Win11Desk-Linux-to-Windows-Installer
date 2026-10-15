@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { Bell, Check, RefreshCw } from "lucide-react";
 import { Link } from "wouter";
 import { api, formatDate } from "../api";
 import type { KindFilter, NotificationsResponse, ReadFilter } from "./types";
@@ -50,13 +51,14 @@ export default function NotificationsPanel({ open, onToggle }: Props) {
   }
   return (
     <section
-      className={`ops-panel ops-notifications ${open ? "is-open" : "is-collapsed"}`}
+      className={`ops-panel ops-vng-panel ops-notifications ${open ? "is-open" : "is-collapsed"}`}
       aria-labelledby="operations-notifications-title"
     >
-      <div className="ops-panel-heading">
+      <div className="ops-panel-heading ops-vng-heading">
         <div>
+          <span className="ops-vng-section-no">INBOX / SIGNALS</span>
           <h2 id="operations-notifications-title">
-            Notifications{" "}
+            <Bell size={15} /> Notifications{" "}
             {resource.data?.unreadCount ? (
               <span className="ops-unread">
                 {resource.data.unreadCount} unread
@@ -69,7 +71,11 @@ export default function NotificationsPanel({ open, onToggle }: Props) {
           </p>
         </div>
         <div className="ops-notification-actions">
-          <button className="secondary-button" type="button" onClick={onToggle}>
+          <button
+            className="secondary-button ops-vng-button"
+            type="button"
+            onClick={onToggle}
+          >
             {open ? "Hide" : "Show"}
           </button>
           {open && (
@@ -79,7 +85,7 @@ export default function NotificationsPanel({ open, onToggle }: Props) {
               onClick={() => void markAllRead()}
               disabled={!items.some(item => !item.readAt)}
             >
-              Mark all read
+              <Check size={13} /> Mark all read
             </button>
           )}
         </div>
@@ -110,16 +116,20 @@ export default function NotificationsPanel({ open, onToggle }: Props) {
               </select>
             </label>
             <button
-              className="secondary-button"
+              className="secondary-button ops-vng-button"
               type="button"
               onClick={resource.reload}
               disabled={resource.loading}
             >
+              <RefreshCw
+                size={13}
+                className={resource.loading ? "ops-spin" : ""}
+              />{" "}
               Refresh
             </button>
           </div>
           {(resource.error || actionError) && (
-            <div className="ops-inline-error" role="alert">
+            <div className="ops-inline-error ops-vng-inline" role="alert">
               <span>{resource.error || actionError}</span>
               <button
                 className="text-button"

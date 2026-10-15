@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
-    "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js && esbuild scripts/migrate.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/migrate.js && esbuild scripts/rotate-vault.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/rotate-vault.js",
+    "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/index.js && esbuild scripts/migrate.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/migrate.js && esbuild scripts/rotate-vault.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/rotate-vault.js && esbuild server/remoteInstall/workerMain.ts --platform=node --packages=external --bundle --format=esm --outfile=dist/remote-worker.js",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
     "format": "prettier --write .",
@@ -15,7 +15,8 @@
     "dev:static": "vite --host 0.0.0.0 --port ${PORT:-3000} --strictPort",
     "build:static": "vite build",
     "migrate": "node dist/migrate.js",
-    "db:rotate": "tsx scripts/rotate-vault.ts"
+    "db:rotate": "tsx scripts/rotate-vault.ts",
+    "remote:worker": "NODE_ENV=production node dist/remote-worker.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
@@ -64,6 +65,7 @@
     "express": "^4.21.2",
     "framer-motion": "^12.23.22",
     "input-otp": "^1.4.2",
+    "ipaddr.js": "2.2.0",
     "jose": "6.1.0",
     "lucide-react": "^0.453.0",
     "mysql2": "^3.15.0",
@@ -76,6 +78,7 @@
     "react-resizable-panels": "^3.0.6",
     "recharts": "^2.15.2",
     "sonner": "^2.0.7",
+    "ssh2": "1.17.0",
     "streamdown": "^1.4.0",
     "superjson": "^1.13.3",
     "tailwind-merge": "^3.3.1",
@@ -94,6 +97,7 @@
     "@types/node": "^24.7.0",
     "@types/react": "^19.2.1",
     "@types/react-dom": "^19.2.1",
+    "@types/ssh2": "1.15.5",
     "@vitejs/plugin-react": "^5.0.4",
     "add": "^2.0.6",
     "autoprefixer": "^10.4.20",

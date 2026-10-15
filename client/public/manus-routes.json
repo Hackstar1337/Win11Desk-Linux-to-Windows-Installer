@@ -75,6 +75,10 @@
     {
       "path": "/profiles/:id",
       "title": "Deployment profile detail"
+    },
+    {
+      "path": "/remote-jobs",
+      "title": "Remote installations"
     }
   ]
 }

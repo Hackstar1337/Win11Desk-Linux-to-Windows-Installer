@@ -34,10 +34,10 @@ export function registerInstallerRoutes(app: Express) {
       reusablePasswordPrompt: true,
       pagePasswordDelivery:
         "stateless encrypted POST; 30-minute delivery window",
-      windowsBootAndRdpVerified: true,
-      exactWebsiteGeneratedCommandVerified: true,
+      windowsBootAndRdpVerified: false,
+      exactWebsiteGeneratedCommandVerified: false,
       verificationScope:
-        "Historical approved disposable VPS tests; each current run must report Windows proof separately.",
+        "No user-provided ISO or current deployment is verified by this repository; validate each run independently.",
       ordinaryDesktopAndLiveEditionVerified: false,
       mode: "copy-and-run-linux-vps-installer",
       os: "Windows 11 Pro",
@@ -46,7 +46,7 @@ export function registerInstallerRoutes(app: Express) {
       credentialsStored:
         "expiring encrypted installer ciphertext; key not stored",
       required: [
-        "A direct HTTPS Windows ISO URL from Microsoft official download page",
+        "User-provided direct HTTPS Windows ISO link; download the ISO from Microsoft's official Windows 11 page",
         "Compatible VPS; automatic target and media integrity checks",
         "Disposable target/backup and provider recovery console; pasting a new automatic command authorizes erasure/reboot",
       ],
@@ -90,7 +90,7 @@ export function registerInstallerRoutes(app: Express) {
       if (input.config.password.length < 8) {
         res.status(400).json({
           error:
-            "Set a 8â€“128 character Windows password before generating your command.",
+            "Set a 8–128 character Windows password before generating your command.",
         });
         return;
       }

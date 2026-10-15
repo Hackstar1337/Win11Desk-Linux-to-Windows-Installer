@@ -1,0 +1,42 @@
+[
+  {
+    "name": "spotlight-navbar",
+    "upstream": "https://www.vengenceui.com/components/spotlight-navbar",
+    "registry": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/spotlight-navbar.json",
+    "upstreamSha256": "ce17272872bb7d90a8636ac41dbe8d52c34287fcbd80013ee527e209cefba3b4",
+    "file": "spotlight-navbar.tsx",
+    "adaptations": "Removed Next styled-jsx; scoped CSS; SPA callback navigation; aria-current; useReducedMotion."
+  },
+  {
+    "name": "animated-button",
+    "upstream": "https://www.vengenceui.com/components/animated-button",
+    "registry": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/animated-button.json",
+    "upstreamSha256": "993114e87e72420ec00934490241ca9d9da913e42aaab4d39134223ee68ff367",
+    "file": "animated-button.tsx",
+    "adaptations": "Native API retained; hover/focus-only border shine; readable unmasked text; useReducedMotion."
+  },
+  {
+    "name": "animated-number",
+    "upstream": "https://www.vengenceui.com/components/animated-number",
+    "registry": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/animated-number.json",
+    "upstreamSha256": "37a2b50472a97dee78ec7129aa45e304409a1b7e146fd5285b389b332d6cd86b",
+    "file": "animated-number.tsx",
+    "adaptations": "Official digit-strip implementation with hidden decorative digits and a screen-reader value."
+  },
+  {
+    "name": "glow-border-card",
+    "upstream": "https://www.vengenceui.com/components/glow-border-card",
+    "registry": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/glow-border-card.json",
+    "upstreamSha256": "0870b5f7f9befc01666dbadeb5ff0737a65dde54682d7c501157ac47c12e0c7f",
+    "file": "glow-border-card.tsx",
+    "adaptations": "Original props and effects retained; full-width grid track adaptation for dashboard content; official CSS extracted; restrained/paused metric surfaces and reduced-motion styling."
+  },
+  {
+    "name": "kinetic-text-loader",
+    "upstream": "https://www.vengenceui.com/components/kinetic-text-loader",
+    "registry": "https://raw.githubusercontent.com/Ashutoshx7/VengeanceUI/main/public/r/kinetic-text-loader.json",
+    "upstreamSha256": "267c0012842fcc29c2168518ed73bf04c9094c2dc80a34378ed1e6375ecdda3d",
+    "file": "kinetic-text-loader.tsx",
+    "adaptations": "Removed per-instance Google font import; local font and contained loading view; CSS reduced motion."
+  }
+]

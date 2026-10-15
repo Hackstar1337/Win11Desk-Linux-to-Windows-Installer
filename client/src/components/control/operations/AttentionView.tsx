@@ -1,6 +1,7 @@
 import { deploymentStatusLabel } from "@shared/deploymentStatus";
 import { useState } from "react";
 import { Link } from "wouter";
+import { ArrowUpRight, RefreshCw } from "lucide-react";
 import type { OperationsAttention } from "@shared/operationsDashboard";
 import { formatAge, formatDate } from "../api";
 import { safeFailureGuidance } from "@shared/operationsDashboard";
@@ -25,27 +26,30 @@ export default function AttentionView({
   const [details, setDetails] = useState<string | null>(null);
   const items = data?.items || [];
   return (
-    <section className="ops-panel" aria-labelledby="operations-attention-title">
-      <div className="ops-panel-heading">
+    <section
+      className="ops-panel ops-vng-panel ops-attention-panel"
+      aria-labelledby="operations-attention-title"
+    >
+      <div className="ops-panel-heading ops-vng-heading">
         <div>
+          <span className="ops-vng-section-no">02 / REVIEW</span>
           <h2 id="operations-attention-title">Needs attention</h2>
           <p>
-            Failed deployments or deployments awaiting update, bounded to the
-            server-provided limit. This view offers inspection, never remote
-            action.
+            Failed deployments and installations awaiting an update, up to the
+            displayed limit. Review only — no remote action is taken.
           </p>
         </div>
         <button
-          className="secondary-button"
+          className="secondary-button ops-vng-button"
           type="button"
           onClick={reload}
           disabled={loading}
         >
-          Refresh
+          <RefreshCw size={14} className={loading ? "ops-spin" : ""} /> Refresh
         </button>
       </div>
       {error && (
-        <div className="ops-inline-error" role="alert">
+        <div className="ops-inline-error ops-vng-inline" role="alert">
           <span>{error}</span>
           <button className="text-button" type="button" onClick={reload}>
             Retry
@@ -56,25 +60,25 @@ export default function AttentionView({
         <div className="ops-state">Loading attention items…</div>
       ) : data && items.length ? (
         <>
-          <div className="ops-meta-line">
+          <div className="ops-meta-line ops-vng-meta">
             <span>
               Last checked <strong>{formatDate(data.checkedAt)}</strong>
             </span>
-            <span>
-              Showing {items.length} of {data.limit}
+            <span className="mono">
+              SHOWING {items.length} OF {data.limit}
             </span>
           </div>
-          <div className="ops-table-wrap">
-            <table className="ops-table">
+          <div className="ops-table-wrap ops-vng-table-wrap">
+            <table className="ops-table ops-vng-table">
               <thead>
                 <tr>
-                  <th>Stage</th>
-                  <th>Deployment / IP</th>
+                  <th>Status</th>
+                  <th>Installation / IP</th>
                   <th>Profile</th>
-                  <th>Heartbeat</th>
+                  <th>Last check-in</th>
                   <th>Created</th>
                   <th>Elapsed</th>
-                  <th>Safe code</th>
+                  <th>Reference code</th>
                   <th>Next step</th>
                   <th>Inspect</th>
                 </tr>
@@ -139,14 +143,14 @@ export default function AttentionView({
                           className="text-button"
                           href={`/deployments/${item.id}`}
                         >
-                          Open timeline
+                          Open deployment <ArrowUpRight size={12} />
                         </Link>
                         {item.profileId && (
                           <Link
                             className="text-button"
                             href={`/deployments?p=${encodeURIComponent(item.profileId)}`}
                           >
-                            Profile history
+                            Installation history
                           </Link>
                         )}
                       </div>
@@ -161,7 +165,7 @@ export default function AttentionView({
               const item = items.find(value => value.id === details);
               return item ? (
                 <div
-                  className="ops-detail"
+                  className="ops-detail ops-vng-detail"
                   role="region"
                   aria-label={`Details for ${item.id}`}
                 >
@@ -187,7 +191,7 @@ export default function AttentionView({
                       <dd>{formatDate(item.finishedAt)}</dd>
                     </div>
                     <div>
-                      <dt>Heartbeat</dt>
+                      <dt>Last check-in</dt>
                       <dd>{formatDate(item.lastHeartbeatAt)}</dd>
                     </div>
                     <div>
@@ -197,7 +201,7 @@ export default function AttentionView({
                   </dl>
                   <p className="ops-muted">
                     Credentials, raw logs, and remote controls are intentionally
-                    not displayed here.
+                    not shown here.
                   </p>
                 </div>
               ) : null;

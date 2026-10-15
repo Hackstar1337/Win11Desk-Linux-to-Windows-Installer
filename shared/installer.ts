@@ -1,3 +1,4 @@
+import type { PostInstallPayload } from "./postInstall";
 import {
   WINDOWS_PASSWORD_MIN_LENGTH,
   windowsPasswordIssue,
@@ -163,6 +164,7 @@ export function linuxInstaller(
     tracking?: InstallerTrackingConfig;
     osId?: string;
     imageName?: string;
+    postInstall?: PostInstallPayload;
   } = {}
 ) {
   const selected = resolveInstallerOs(config, options);
@@ -247,8 +249,10 @@ if [[ "$TARGET_DISK" == auto ]]; then
 fi
 [[ -b "$TARGET_DISK" ]] || fail "Not a block device: $TARGET_DISK"
 [[ "$(lsblk -dn -o TYPE "$TARGET_DISK")" == disk ]] || fail 'Select a whole disk, not a partition/LVM/RAID device.'
-if lsblk -rn -o TYPE "$TARGET_DISK" | grep -Eq '^(crypt|lvm|raid.*)$'; then fail 'Encrypted/LVM/RAID disks require a separately reviewed installation path.'; fi
-if lsblk -rn -o MOUNTPOINT "$TARGET_DISK" | grep -E '^/' | grep -qvE '^(/|/boot|/boot/efi)$'; then fail 'Disk has extra data mounts. Review or move data before proceeding.'; fi
+DISK_TYPES=$(lsblk -rn -o TYPE "$TARGET_DISK") || fail 'Cannot inspect system disk topology.'
+if printf '%s\n' "$DISK_TYPES" | grep -E '^(crypt|lvm|raid.*)$' >/dev/null; then fail 'Encrypted/LVM/RAID disks require a separately reviewed installation path.'; fi
+DISK_MOUNTS=$(lsblk -rn -o MOUNTPOINT "$TARGET_DISK") || fail 'Cannot inspect system disk mounts.'
+if printf '%s\n' "$DISK_MOUNTS" | grep -E '^/' | grep -vE '^(/|/boot|/boot/efi)$' >/dev/null; then fail 'Disk has extra data mounts. Review or move data before proceeding.'; fi
 ROOT_DEVICE=$(findmnt -n -o SOURCE /)
 if [[ "$ROOT_DEVICE" != /dev/* ]] || ! lsblk -s -nr -o PATH "$ROOT_DEVICE" | grep -Fxq "$TARGET_DISK"; then fail "Selected disk is not the current root-system disk: $ROOT_DEVICE"; fi
 RAM_KB=$(awk '/MemTotal/ {print $2}' /proc/meminfo)
@@ -355,7 +359,7 @@ grep -Fxq "$TRANS_LINE" "$WORK/reinstall.sh" || fail 'Pinned second-stage hook c
 sed -i 's|^    curl -Lo $initrd_dir/trans.sh $confhome/trans.sh$|    cp /root/win11desk/trans.sh $initrd_dir/trans.sh|' "$WORK/reinstall.sh"
 ${secondStageMediaGuardShell()}
 ${selectedImageGuardShell()}
-${options.tracking ? trackingPatchShell(os, imageName) + telemetryPatchShell() : ""}
+${options.tracking ? trackingPatchShell(os, imageName, options.postInstall) + telemetryPatchShell() : ""}
 chmod 700 "$WORK/reinstall.sh"
 # Real upstream Windows ISO installation path; no raw-disk custom image or alternative edition.
 export password

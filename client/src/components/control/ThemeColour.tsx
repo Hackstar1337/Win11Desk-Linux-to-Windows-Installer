@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState, useEffect, useId } from "react";
 import { Palette } from "lucide-react";
 import {
   dashboardThemes,
@@ -8,13 +8,33 @@ import {
 } from "../../../../shared/dashboardTheme";
 function storedTheme(): DashboardThemeId {
   try {
-    return dashboardTheme(localStorage.getItem(DASHBOARD_THEME_STORAGE)).id;
+    return dashboardTheme(
+      localStorage.getItem(DASHBOARD_THEME_STORAGE) || "violet"
+    ).id;
   } catch {
-    return "cyan";
+    return "violet";
   }
 }
 export default function ThemeColour() {
+  const inputId = `dashboard-theme-${useId()}`;
   const [selected, setSelected] = useState<DashboardThemeId>(storedTheme);
+  useEffect(() => {
+    const sync = (event: Event) => {
+      if (event instanceof CustomEvent)
+        setSelected(dashboardTheme(event.detail).id);
+      else if (
+        event instanceof StorageEvent &&
+        event.key === DASHBOARD_THEME_STORAGE
+      )
+        setSelected(dashboardTheme(event.newValue || "violet").id);
+    };
+    window.addEventListener("win11desk-theme-changed", sync);
+    window.addEventListener("storage", sync);
+    return () => {
+      window.removeEventListener("win11desk-theme-changed", sync);
+      window.removeEventListener("storage", sync);
+    };
+  }, []);
   useLayoutEffect(() => {
     const theme = dashboardTheme(selected),
       root = document.documentElement;
@@ -32,16 +52,22 @@ export default function ThemeColour() {
   }, [selected]);
   return (
     <div className="theme-colour-control">
-      <label htmlFor="dashboard-theme">
+      <label htmlFor={inputId}>
         <Palette size={13} />
         Theme colour
       </label>
       <div className="theme-colour-input">
         <span className="theme-colour-swatch" aria-hidden="true" />
         <select
-          id="dashboard-theme"
+          id={inputId}
           value={selected}
-          onChange={e => setSelected(dashboardTheme(e.target.value).id)}
+          onChange={e => {
+            const id = dashboardTheme(e.target.value).id;
+            setSelected(id);
+            window.dispatchEvent(
+              new CustomEvent("win11desk-theme-changed", { detail: id })
+            );
+          }}
         >
           {dashboardThemes.map(theme => (
             <option key={theme.id} value={theme.id}>

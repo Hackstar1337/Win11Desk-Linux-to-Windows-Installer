@@ -1,11 +1,19 @@
 import { Link } from "wouter";
-import { RefreshCw } from "lucide-react";
+import {
+  Activity,
+  ArrowUpRight,
+  RefreshCw,
+  Server,
+  ShieldCheck,
+} from "lucide-react";
 import type { OperationsHealth, CheckState } from "@shared/operationsDashboard";
 import { formatDate } from "../api";
 import type { HealthResource } from "./types";
+import { AnimatedNumber } from "../../vengeance/animated-number";
+import { GlowBorderCard } from "../../vengeance/glow-border-card";
+import { KineticTextLoader } from "../../vengeance/kinetic-text-loader";
 
 type Props = HealthResource;
-
 function StatusBadge({ state }: { state?: CheckState | string | null }) {
   const value = state || "unknown";
   return (
@@ -15,7 +23,6 @@ function StatusBadge({ state }: { state?: CheckState | string | null }) {
     </span>
   );
 }
-
 function Value({ value }: { value: unknown }) {
   return (
     <span className="ops-value">
@@ -25,7 +32,6 @@ function Value({ value }: { value: unknown }) {
     </span>
   );
 }
-
 function CountList({
   label,
   values,
@@ -46,10 +52,32 @@ function CountList({
       <dd className="ops-counts">
         {Object.entries(values).map(([key, value]) => (
           <span key={key}>
-            <b>{value}</b> {key}
+            <b>
+              <AnimatedNumber value={value} />
+            </b>{" "}
+            {key}
           </span>
         ))}
       </dd>
+    </div>
+  );
+}
+function Metric({
+  label,
+  value,
+  note,
+}: {
+  label: string;
+  value: number | string;
+  note: string;
+}) {
+  return (
+    <div className="ops-vng-metric">
+      <span>{label}</span>
+      <strong>
+        {typeof value === "number" ? <AnimatedNumber value={value} /> : value}
+      </strong>
+      <small>{note}</small>
     </div>
   );
 }
@@ -57,18 +85,24 @@ function CountList({
 export default function HealthView({ data, error, loading, reload }: Props) {
   const checks = data?.checks || [];
   const pending = data?.migrations?.pending || [];
+  const ready = data?.profiles?.ready ?? 0;
+  const active = data?.deployments?.active ?? 0;
   return (
-    <section className="ops-panel" aria-labelledby="operations-health-title">
-      <div className="ops-panel-heading">
+    <section
+      className="ops-panel ops-vng-panel ops-health-panel"
+      aria-labelledby="operations-health-title"
+    >
+      <div className="ops-panel-heading ops-vng-heading">
         <div>
+          <span className="ops-vng-section-no">01 / HEALTH</span>
           <h2 id="operations-health-title">System health</h2>
           <p>
-            Read-only checks from the control plane. Each check keeps its own
-            reported state.
+            Read-only checks for the service. Each check shows its reported
+            state.
           </p>
         </div>
         <button
-          className="secondary-button"
+          className="secondary-button ops-vng-button"
           type="button"
           onClick={reload}
           disabled={loading}
@@ -77,7 +111,7 @@ export default function HealthView({ data, error, loading, reload }: Props) {
         </button>
       </div>
       {error && (
-        <div className="ops-inline-error" role="alert">
+        <div className="ops-inline-error ops-vng-inline" role="alert">
           <span>{error}</span>
           <button className="text-button" type="button" onClick={reload}>
             Retry
@@ -85,19 +119,60 @@ export default function HealthView({ data, error, loading, reload }: Props) {
         </div>
       )}
       {loading && !data ? (
-        <div className="ops-state">Loading health checks…</div>
+        <div className="ops-state ops-vng-loading">
+          <KineticTextLoader text="SYNC" />
+          <span>Loading health checks…</span>
+        </div>
       ) : data ? (
         <>
-          <div className="ops-meta-line">
+          <div className="ops-meta-line ops-vng-meta">
             <span>
               Last checked <strong>{formatDate(data.checkedAt)}</strong>
             </span>
-            <span>{checks.length} checks reported</span>
+            <span className="mono">{checks.length} CHECKS REPORTED</span>
           </div>
-          <div className="ops-check-grid">
+          <GlowBorderCard
+            width="100%"
+            height="auto"
+            borderRadius="12px"
+            borderWidth="0.3em"
+            blurAmount="0.8em"
+            paused
+            gradientColors={["#a78bfa", "#4338ca", "#14111f", "#a78bfa"]}
+            className="ops-vng-signal-card"
+          >
+            <div className="ops-vng-signal-inner">
+              <div className="ops-vng-signal-mark">
+                <Activity size={18} />
+                <span>
+                  SYSTEM HEALTH
+                  <br />
+                  <b>CHECK RESULTS</b>
+                </span>
+              </div>
+              <div className="ops-vng-metrics">
+                <Metric
+                  label="PROFILES READY"
+                  value={ready}
+                  note="configured for use"
+                />
+                <Metric
+                  label="ACTIVE DEPLOYMENTS"
+                  value={active}
+                  note="reported by database"
+                />
+                <Metric
+                  label="CHECKS"
+                  value={checks.length}
+                  note="separate checks"
+                />
+              </div>
+            </div>
+          </GlowBorderCard>
+          <div className="ops-vng-subgrid ops-check-grid">
             {checks.length ? (
               checks.map(check => (
-                <article className="ops-check" key={check.id}>
+                <article className="ops-check ops-vng-check" key={check.id}>
                   <div>
                     <strong>{check.label}</strong>
                     <StatusBadge state={check.state} />
@@ -114,8 +189,8 @@ export default function HealthView({ data, error, loading, reload }: Props) {
               <div className="ops-state">No health checks reported.</div>
             )}
           </div>
-          <div className="ops-health-grid">
-            <dl className="ops-facts">
+          <div className="ops-health-grid ops-vng-fact-grid">
+            <dl className="ops-facts ops-vng-facts">
               <div className="ops-fact">
                 <dt>Database migrations</dt>
                 <dd>
@@ -140,7 +215,7 @@ export default function HealthView({ data, error, loading, reload }: Props) {
                 </dd>
               </div>
             </dl>
-            <dl className="ops-facts">
+            <dl className="ops-facts ops-vng-facts">
               <div className="ops-fact ops-fact-stack">
                 <dt>Versions</dt>
                 <dd>
@@ -157,11 +232,11 @@ export default function HealthView({ data, error, loading, reload }: Props) {
               </div>
               <CountList label="Configured profiles" values={data.profiles} />
               <p className="ops-muted">
-                Ready means configured for issuance, not verified ISO
-                reachability or new-OS installation certification.
+                Ready means configured for use, not verified ISO access or a
+                completed Windows installation.
               </p>
-              <Link className="text-button" href="/profiles">
-                Manage deployment profiles
+              <Link className="text-button ops-vng-link" href="/profiles">
+                Manage installation profiles <ArrowUpRight size={13} />
               </Link>
               <CountList
                 label="Commands permitted"
@@ -179,8 +254,8 @@ export default function HealthView({ data, error, loading, reload }: Props) {
               />
             </dl>
           </div>
-          <div className="ops-health-grid">
-            <dl className="ops-facts">
+          <div className="ops-health-grid ops-vng-fact-grid">
+            <dl className="ops-facts ops-vng-facts">
               <div className="ops-fact">
                 <dt>Configured callback origin</dt>
                 <dd>
@@ -211,7 +286,7 @@ export default function HealthView({ data, error, loading, reload }: Props) {
                 </dd>
               </div>
             </dl>
-            <dl className="ops-facts">
+            <dl className="ops-facts ops-vng-facts">
               <div className="ops-fact">
                 <dt>Active deployments</dt>
                 <dd>
@@ -232,9 +307,11 @@ export default function HealthView({ data, error, loading, reload }: Props) {
               </div>
             </dl>
           </div>
-          <dl className="ops-facts ops-backup">
+          <dl className="ops-facts ops-backup ops-vng-backup">
             <div className="ops-fact">
-              <dt>Backup state</dt>
+              <dt>
+                <ShieldCheck size={13} /> Backup state
+              </dt>
               <dd>
                 <StatusBadge state={data.backup.state} />{" "}
                 {data.backup.outcome === "not-reported"
@@ -243,7 +320,7 @@ export default function HealthView({ data, error, loading, reload }: Props) {
               </dd>
             </div>
             <div className="ops-fact">
-              <dt>Latest backup attempt</dt>
+              <dt>Latest attempt</dt>
               <dd>
                 {data.backup.lastBackupAt
                   ? formatDate(data.backup.lastBackupAt)

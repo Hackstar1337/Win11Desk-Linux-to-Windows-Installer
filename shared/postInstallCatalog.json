@@ -1,0 +1,59 @@
+[
+  {
+    "id": "firefox",
+    "name": "Mozilla Firefox",
+    "version": "157.0.1",
+    "filename": "firefox-157.0.1-x64.exe",
+    "url": "https://download-installer.cdn.mozilla.net/pub/firefox/releases/157.0.1/win64/en-US/Firefox%20Setup%20157.0.1.exe",
+    "sha256": "71dc620e7749bb65be6df67b99261a303805a804f9c787b76b81c095cfa7d9ca",
+    "maxBytes": 402653184,
+    "publisher": "Mozilla",
+    "requireSignature": false,
+    "minBuild": 19041,
+    "sources": [
+      "https://raw.githubusercontent.com/microsoft/winget-pkgs/8328dfc5700c505f27e57ddeb69f070ae7312061/manifests/m/Mozilla/Firefox/157.0.1/Mozilla.Firefox.installer.yaml",
+      "https://support.mozilla.org/en-US/kb/deploy-firefox-msi-installers",
+      "https://www.firefox.com/en-US/browsers/enterprise/"
+    ],
+    "sourceNote": "Verified in Sandbox only: the pinned winget-pkgs manifest at commit 8328dfc5700c505f27e57ddeb69f070ae7312061 identifies the x64 stable full Firefox 157.0.1 EXE and expected SHA256. The official Mozilla CDN URL returned successfully; downloaded bytes were hashed locally and matched exactly (93445848 bytes). This is download-only; the EXE was not executed and no target installation or winget operation was performed. Catalog minimum Windows client build is 19041 (Windows 10 20H1); Windows 11 is supported from build 22000 per catalog constraints. No Windows Server certification is claimed."
+  },
+  {
+    "id": "brave",
+    "name": "Brave",
+    "version": "155.1.97.56",
+    "filename": "brave-155.1.97.56-x64.exe",
+    "url": "https://github.com/brave/brave-browser/releases/download/v1.97.56/BraveBrowserStandaloneSetup.exe",
+    "sha256": "748b3237aeeee4ef838193331bd6183937c4a8e31e6257059b74ae0ec79738b9",
+    "maxBytes": 402653184,
+    "publisher": "Brave Software Inc",
+    "requireSignature": false,
+    "minBuild": 19041,
+    "sources": [
+      "https://raw.githubusercontent.com/microsoft/winget-pkgs/82146746034bde6f74a4af03772a83ebbf106567/manifests/b/Brave/Brave/155.1.97.56/Brave.Brave.installer.yaml",
+      "https://github.com/brave/brave-browser/releases/tag/v1.97.56",
+      "https://brave.com/download/",
+      "https://support.brave.com/hc/en-us/articles/360021357112-What-are-the-system-requirements-to-install-Brave-"
+    ],
+    "sourceNote": "Verified Windows x64 machine-scope standalone EXE (not MSI) from the Brave release asset referenced by the pinned winget-pkgs master commit 82146746034bde6f74a4af03772a83ebbf106567. The manifest identifies package version 155.1.97.56, release tag v1.97.56, URL, and expected SHA256. Download returned HTTP 200, 167208800 bytes, and the computed SHA256 matched exactly. Brave officially states Windows 10 or later; minBuild 19041 is the requested Win10 baseline mapping. No Server certification is claimed. Download-only verification completed in Sandbox; the EXE was not executed or installed. Place the safe filename in the target Public Desktop folder when downloading on the target; do not use winget or run the installer."
+  },
+  {
+    "id": "7zip",
+    "name": "7-Zip",
+    "version": "26.04",
+    "filename": "7zip-26.04-x64.exe",
+    "url": "https://www.7-zip.org/a/7z2604-x64.exe",
+    "sha256": "d54bf805f9f3704d1e8db2fa3498ae7ef2df0312b40b558e7c71c734430a665d",
+    "maxBytes": 33554432,
+    "publisher": "Igor Pavlov / 7-Zip",
+    "requireSignature": false,
+    "minBuild": 19041,
+    "sources": [
+      "https://www.7-zip.org/download.html",
+      "https://www.7-zip.org/",
+      "https://raw.githubusercontent.com/microsoft/winget-pkgs/54ea6e0058a16f57fb0a1e92eebcbcedc245c6b8/manifests/7/7zip/7zip/26.04/7zip.7zip.installer.yaml",
+      "https://api.github.com/repos/microsoft/winget-pkgs/commits?path=manifests/7/7zip/7zip/26.04/7zip.7zip.installer.yaml&per_page=1",
+      "https://github.com/ip7z/7zip/releases/tag/26.04"
+    ],
+    "sourceNote": "Verified current stable Windows x64 standalone EXE. The winget-pkgs installer manifest was fetched at pinned commit 54ea6e0058a16f57fb0a1e92eebcbcedc245c6b8; its URL and SHA256 exactly match the downloaded file (1,664,082 bytes). Official 7-Zip recommends the EXE over the alternative MSI. Download only; do not execute or install on the target. The publisher page lists Windows 10/11 and Server 2019/2022 support, but this record makes no Server certification claim. Minimum catalog client build: Windows 10 19041 (Windows 11 >=22000)."
+  }
+]

@@ -22,6 +22,8 @@ async function main() {
       ["server/control/extra-schema.sql", "control-extra-v1"],
       ["server/control/profiles-schema.sql", "control-profiles-v1"],
       ["server/control/display-labels-schema.sql", "control-display-labels-v1"],
+      ["server/control/post-install-schema.sql", "control-post-install-v1"],
+      ["server/control/remoteInstall-schema.sql", "control-remote-install-v1"],
     ];
     for (const [file, name] of files) {
       const [known]: any = await db.execute(

@@ -1,16 +1,16 @@
 import { useState } from "react";
 import type { DeploymentConfig } from "@shared/deployment";
 import { installerIssues, installTargetSchema } from "@shared/installer";
-import { automaticTarget } from "@shared/media";
+import { automaticTarget, defaultIsoUrl } from "@shared/media";
 import { mediaExpiry } from "@shared/reusableInstaller";
 import { Field } from "./DeploymentControls";
 import PageSettingsInstaller from "./PageSettingsInstaller";
 const mediaKey = "win11desk-iso-v3-direct";
 function initialIso() {
   try {
-    return localStorage.getItem(mediaKey) || "";
+    return localStorage.getItem(mediaKey) || defaultIsoUrl;
   } catch {
-    return "";
+    return defaultIsoUrl;
   }
 }
 export default function InstallerPackage({
@@ -34,20 +34,29 @@ export default function InstallerPackage({
   }
   return (
     <div className="simple-install" id="command">
-      <Field label="Windows ISO URL" htmlFor="iso-url">
+      <Field label="Windows ISO" htmlFor="iso-url">
         <input
           id="iso-url"
           type="url"
           value={isoUrl}
           onChange={e => change(e.target.value)}
-          placeholder="Paste a direct HTTPS Windows ISO URL"
+          placeholder="Direct HTTPS Windows ISO link"
           aria-invalid={!mediaValid}
         />
         <div className="source-meta">
-          <span>Windows 11 Pro Â· x64</span>
+          <span>Windows 11 Pro · x64</span>
+          <a
+            href="https://www.microsoft.com/software-download/windows11"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-button"
+          >
+            Get a Windows 11 ISO from Microsoft
+          </a>
         </div>
         <p className="helper-text">
-          Paste a direct HTTPS ISO URL obtained from Microsoft official Windows 11 download page. The VPS downloads only from the URL you provide; no mirror or fallback is used. ISO integrity is checked automatically.
+          Your VPS downloads directly from this link. Change it if needed; no
+          alternate source is used. ISO integrity is checked automatically.
         </p>
         {expired && (
           <p className="field-error">

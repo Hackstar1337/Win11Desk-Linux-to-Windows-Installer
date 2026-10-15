@@ -16,8 +16,14 @@ import {
 } from "lucide-react";
 import { api, formatDate } from "./api";
 import { Link } from "wouter";
+import { GlowBorderCard } from "../vengeance/glow-border-card";
+import AnimatedButton from "../vengeance/animated-button";
+import { AnimatedNumber } from "../vengeance/animated-number";
+import "../../pages/control/screens/DeploymentsPage.css";
 
 type Deployment = {
+  launchMethod?: "manual" | "ssh";
+  remoteJobId?: string | null;
   profile?: { id: string; name: string; revision: number; osId: string } | null;
   os?: string;
   id?: string;
@@ -110,6 +116,16 @@ function CopyValueButton({
       {copied ? <Check size={13} /> : <Copy size={13} />}{" "}
       {copied ? "Copied" : label}
     </button>
+  );
+}
+
+function isCredentialCancellation(error: unknown) {
+  if (!error || typeof error !== "object") return false;
+  const name = "name" in error ? error.name : undefined;
+  const message = "message" in error ? error.message : undefined;
+  return (
+    name === "AbortError" ||
+    message === "Credential request cancelled because the page changed."
   );
 }
 
@@ -225,11 +241,12 @@ function CredentialControls({
       setCopied(kind);
       // Do not populate credential state for a copy-only request: Copy never reveals the password visually.
     } catch (error) {
-      onError(
-        error instanceof Error
-          ? `Copy failed: ${error.message}`
-          : "Copy failed; the clipboard was not changed."
-      );
+      if (!isCredentialCancellation(error))
+        onError(
+          error instanceof Error
+            ? `Copy failed: ${error.message}`
+            : "Copy failed; the clipboard was not changed."
+        );
     } finally {
       setBusy(null);
     }
@@ -247,9 +264,10 @@ function CredentialControls({
       if (document.hidden) return;
       setCredential({ ...value, expiresAt: Date.now() + 30000 });
     } catch (error) {
-      onError(
-        error instanceof Error ? error.message : "Credential reveal failed."
-      );
+      if (!isCredentialCancellation(error))
+        onError(
+          error instanceof Error ? error.message : "Credential reveal failed."
+        );
     } finally {
       setBusy(null);
     }
@@ -369,119 +387,188 @@ export default function DeploymentPresentation({
   const port = deployment.rdpPort || deployment.commandRemotePort;
   const address = rdpAddress(deployment.publicIP, port) || "Unavailable";
   const isTerminal = status === "completed" || status === "failed";
+  const railStages = [
+    { number: "01", label: "Preflight", key: "preflight" },
+    { number: "02", label: "Transfer", key: "download" },
+    { number: "03", label: "Windows ready", key: "windows_ready" },
+  ];
+  const railIndex = deployment.stage
+    ? railStages.findIndex(item => deployment.stage?.includes(item.key))
+    : -1;
   return (
-    <div className={`deployment-presentation ${compact ? "is-compact" : ""}`}>
-      {deployment.profile && (
-        <p className="form-hint">
-          <Link href={`/profiles/${deployment.profile.id}`}>
-            {profileOptionLabel(
-              deployment.profile.name,
-              deployment.os || deployment.profile.name
-            )}
-          </Link>{" "}
-          · issued revision {deployment.profile.revision}
-        </p>
-      )}
-      <div className="deployment-summary">
-        <div>
-          <span className="deployment-kicker">
-            {deployment.label ||
-              deployment.hostname ||
-              deployment.id ||
-              "Deployment"}
-          </span>
-          <div className="deployment-status-row">
-            <StateBadge value={status} />
-            {deployment.stage && (
-              <span className="stage-name">{stateLabel(deployment.stage)}</span>
-            )}
-            {stale && status !== "stale" && <StateBadge value="stale" />}
-          </div>
-        </div>
-        <div className="deployment-timer">
-          <span>
-            {status === "completed"
-              ? "Completed in"
-              : status === "failed"
-                ? "Stopped after"
-                : "Elapsed"}
-          </span>
-          <strong>{elapsed}</strong>
-        </div>
-      </div>
-      <div className="deployment-main-grid">
-        <div className="deployment-measurements">
-          {(!isTerminal || (downloaded !== null && downloaded > 0)) && (
-            <div className="deployment-progress">
-              <div className="progress-heading">
-                <span>
-                  {deployment.phase
-                    ? stateLabel(String(deployment.phase))
-                    : "ISO download"}
-                </span>
-                {percent !== null && <strong>{percent.toFixed(1)}%</strong>}
-              </div>
-              {percent !== null ? (
-                <div
-                  className="progress-track"
-                  aria-label={`${percent.toFixed(1)} percent for ${deployment.phase}`}
-                >
-                  <span style={{ width: `${percent}%` }} />
-                </div>
-              ) : (
-                <p className="form-hint">
-                  Transfer percentage unavailable until both downloaded and
-                  total bytes are reported.
-                </p>
-              )}
-              {hasDownloaded && (
-                <small>
-                  {formatBytes(downloaded)} downloaded
-                  {hasTotal
-                    ? ` / ${formatBytes(total)}`
-                    : " · total size unavailable"}
-                </small>
-              )}
-            </div>
+    <div
+      className={`deployment-presentation vng-presentation ${compact ? "is-compact" : ""}`}
+    >
+      <GlowBorderCard
+        className="vng-presentation__glow"
+        width="100%"
+        height="auto"
+        aspectRatio="unset"
+        borderRadius="12px"
+        borderWidth="1px"
+        blurAmount="10px"
+        inset="-1px"
+        animationDuration={7}
+        gradientColors={["#2b2149", "#a78bfa", "#252038", "#4b3b76", "#2b2149"]}
+        paused={compact}
+      >
+        <div className="vng-presentation__body">
+          {deployment.profile && (
+            <p className="vng-presentation__profile">
+              <Link href={`/profiles/${deployment.profile.id}`}>
+                {profileOptionLabel(
+                  deployment.profile.name,
+                  deployment.os || deployment.profile.name
+                )}
+              </Link>{" "}
+              · issued revision {deployment.profile.revision}
+            </p>
           )}
-          <div className="deployment-facts">
-            <div>
-              <span>Created</span>
-              <strong>{formatDate(deployment.createdAt)}</strong>
+          <div className="vng-presentation__head">
+            <div className="vng-presentation__identity">
+              <span className="vng-history__overline">
+                run / {deployment.id || "unassigned"}
+              </span>
+              <h3>
+                {deployment.label ||
+                  deployment.hostname ||
+                  deployment.id ||
+                  "Deployment"}
+              </h3>
+              <div className="vng-presentation__badges deployment-status-row">
+                <StateBadge value={status} />
+                {deployment.stage && (
+                  <span className="stage-name">
+                    {stateLabel(deployment.stage)}
+                  </span>
+                )}
+                {stale && status !== "stale" && <StateBadge value="stale" />}
+              </div>
             </div>
-            <div>
-              <span>Started</span>
-              <strong>{formatDate(deployment.startedAt)}</strong>
-            </div>
-            <div>
-              <span>{status === "failed" ? "Stopped" : "Completed"}</span>
-              <strong>{formatDate(deployment.finishedAt)}</strong>
-            </div>
-            <div>
-              <span>Timer</span>
-              <strong className="mono">{elapsed}</strong>
-            </div>
-            <div>
-              <span>Heartbeat</span>
-              <strong className={stale ? "awaiting-update-hint" : ""}>
-                {isTerminal ? "Reporter finished" : heartbeatAge}
-                {stale && !isTerminal ? " · Awaiting update" : ""}
-              </strong>
-            </div>
-            <div>
-              <span>Windows evidence</span>
-              <strong>
-                {deployment.windowsEdition
-                  ? `${deployment.windowsEdition}${deployment.windowsBuild ? ` · build ${deployment.windowsBuild}` : ""}${deployment.windowsInstallationType ? ` · ${deployment.windowsInstallationType}` : ""}`
-                  : "Not reported"}
-              </strong>
+            <div className="vng-presentation__elapsed deployment-timer">
+              <span>
+                {status === "completed"
+                  ? "Completed in"
+                  : status === "failed"
+                    ? "Stopped after"
+                    : "Elapsed"}
+              </span>
+              <strong>{elapsed}</strong>
             </div>
           </div>
-        </div>
-        <div className="deployment-connection">
-          <div className="connection-block">
-            <div className="connection-heading">
-              <span>Connection</span>
+          <div
+            className="vng-presentation__rail"
+            aria-label="Deployment workflow stages"
+          >
+            {railStages.map((item, index) => {
+              const current = index === railIndex;
+              const terminal = index === 2 && status === "completed";
+              return (
+                <div
+                  className={`vng-presentation__rail-step ${current ? "is-current" : ""} ${terminal ? "is-terminal" : ""}`}
+                  key={item.key}
+                >
+                  <b>{item.number}</b>
+                  <strong>{item.label}</strong>
+                  <small>
+                    {current
+                      ? "Current evidence"
+                      : terminal
+                        ? "Recorded"
+                        : "Awaiting evidence"}
+                  </small>
+                </div>
+              );
+            })}
+          </div>
+          <div className="vng-presentation__measurements">
+            {(!isTerminal || (downloaded !== null && downloaded > 0)) && (
+              <div className="vng-presentation__progress">
+                <div className="vng-presentation__progress-head">
+                  <span>
+                    {deployment.phase
+                      ? stateLabel(String(deployment.phase))
+                      : "ISO download"}
+                  </span>
+                  {percent !== null && (
+                    <span className="vng-progress-number">
+                      <span className="sr-only">{percent.toFixed(1)}%</span>
+                      <span
+                        aria-hidden="true"
+                        className="inline-flex items-center"
+                      >
+                        <AnimatedNumber
+                          value={Number(percent.toFixed(1).split(".")[0])}
+                        />
+                        <span>.{percent.toFixed(1).split(".")[1]}%</span>
+                      </span>
+                    </span>
+                  )}
+                </div>
+                {percent !== null ? (
+                  <div
+                    className="progress-track"
+                    role="progressbar"
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-valuenow={percent}
+                    aria-label={`${percent.toFixed(1)} percent for ${deployment.phase}`}
+                  >
+                    <span style={{ width: `${percent}%` }} />
+                  </div>
+                ) : (
+                  <p className="form-hint">
+                    Transfer percentage unavailable until both downloaded and
+                    total bytes are reported.
+                  </p>
+                )}
+                {hasDownloaded && (
+                  <small>
+                    {formatBytes(downloaded)} downloaded
+                    {hasTotal
+                      ? ` / ${formatBytes(total)}`
+                      : " · total size unavailable"}
+                  </small>
+                )}
+              </div>
+            )}
+            <div className="vng-presentation__facts deployment-facts">
+              <div className="vng-presentation__fact">
+                <span>Created</span>
+                <strong>{formatDate(deployment.createdAt)}</strong>
+              </div>
+              <div className="vng-presentation__fact">
+                <span>Started</span>
+                <strong>{formatDate(deployment.startedAt)}</strong>
+              </div>
+              <div className="vng-presentation__fact">
+                <span>{status === "failed" ? "Stopped" : "Completed"}</span>
+                <strong>{formatDate(deployment.finishedAt)}</strong>
+              </div>
+              <div className="vng-presentation__fact">
+                <span>Timer</span>
+                <strong>{elapsed}</strong>
+              </div>
+              <div className="vng-presentation__fact">
+                <span>Heartbeat</span>
+                <strong className={stale ? "awaiting-update-hint" : ""}>
+                  {isTerminal ? "Reporter finished" : heartbeatAge}
+                  {stale && !isTerminal ? " · Awaiting update" : ""}
+                </strong>
+              </div>
+              <div className="vng-presentation__fact">
+                <span>Windows evidence</span>
+                <strong>
+                  {deployment.windowsEdition
+                    ? `${deployment.windowsEdition}${deployment.windowsBuild ? ` · build ${deployment.windowsBuild}` : ""}${deployment.windowsInstallationType ? ` · ${deployment.windowsInstallationType}` : ""}`
+                    : "Not reported"}
+                </strong>
+              </div>
+            </div>
+          </div>
+          <div className="vng-presentation__connection">
+            <div className="vng-presentation__connection-heading">
+              <span>Connection & credentials</span>
               {deployment.rdpListening != null && (
                 <small>
                   {deployment.rdpListening
@@ -501,35 +588,35 @@ export default function DeploymentPresentation({
               </div>
             </div>
             <CredentialControls deployment={deployment} onError={setError} />
-          </div>
-          {error && (
-            <p className="field-error" role="alert">
-              {error}
-            </p>
-          )}
-          <div className="deployment-actions">
-            {onRdpDownload && deployment.publicIP && (
-              <button
-                className="text-button"
-                type="button"
-                onClick={onRdpDownload}
-              >
-                <ExternalLink size={13} /> RDP helper
-              </button>
+            {error && (
+              <p className="field-error vng-presentation__error" role="alert">
+                {error}
+              </p>
             )}
-            {trackerUrl && (
-              <a
-                className="text-button"
-                href={trackerUrl}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <ExternalLink size={13} /> Open tracker
-              </a>
-            )}
+            <div className="vng-presentation__actions">
+              {onRdpDownload && deployment.publicIP && (
+                <AnimatedButton
+                  className="vng-action"
+                  type="button"
+                  onClick={onRdpDownload}
+                >
+                  <ExternalLink size={13} /> RDP helper
+                </AnimatedButton>
+              )}
+              {trackerUrl && (
+                <a
+                  className="text-button"
+                  href={trackerUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <ExternalLink size={13} /> Open tracker
+                </a>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      </GlowBorderCard>
     </div>
   );
 }
@@ -604,7 +691,8 @@ export function DeploymentTableRow({
             )}
         </Link>
         <time dateTime={deployment.createdAt || undefined}>
-          {formatDate(deployment.createdAt)}
+          {formatDate(deployment.createdAt)} ·{" "}
+          {deployment.launchMethod === "ssh" ? "SSH" : "Manual"}
         </time>
       </td>
       <td className="row-address">
@@ -651,6 +739,10 @@ export function DeploymentTableRow({
             {progress.percent !== null && (
               <div
                 className="progress-track"
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={progress.percent}
                 aria-label={`${progress.percent.toFixed(1)} percent for ${deployment.phase}`}
               >
                 <span style={{ width: `${progress.percent}%` }} />

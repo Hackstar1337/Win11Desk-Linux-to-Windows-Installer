@@ -1,0 +1,714 @@
+.installer-vng-route {
+  --installer-graphite: #0d0d13;
+  --installer-surface: #12111a;
+  --installer-surface-raised: #171522;
+  --installer-surface-soft: #1c182a;
+  --installer-line: rgba(167, 139, 250, 0.18);
+  --installer-line-strong: rgba(167, 139, 250, 0.38);
+  --installer-text: #f2effb;
+  --installer-muted: #9b96ad;
+  --installer-dim: #6d687d;
+  --installer-violet: var(--primary, #a78bfa);
+  --installer-emerald: #62d6a4;
+  --installer-amber: #e6b56a;
+  --installer-rose: #eb8b9a;
+  position: relative;
+  min-width: 0;
+  color: var(--installer-text);
+}
+
+.installer-vng-route::before {
+  position: absolute;
+  z-index: -1;
+  top: -38px;
+  right: -10vw;
+  width: min(760px, 80vw);
+  height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(114, 80, 198, 0.1), transparent 68%);
+  content: "";
+  pointer-events: none;
+}
+
+.installer-vng-commandbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  min-height: 47px;
+  margin: -8px 0 18px;
+  padding: 0 1px 12px;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.14);
+}
+
+.installer-vng-commandbar-copy,
+.installer-vng-commandbar-meta,
+.installer-vng-signal-value,
+.installer-vng-sensitive-note,
+.installer-vng-profile-link {
+  display: inline-flex;
+  align-items: center;
+}
+
+.installer-vng-commandbar-copy {
+  gap: 12px;
+}
+
+.installer-vng-commandbar-title {
+  color: #d6d0e7;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 620;
+  letter-spacing: -0.1px;
+}
+
+.installer-vng-kicker {
+  color: var(--installer-violet);
+  font-size: 9px;
+  font-weight: 750;
+  letter-spacing: 1.4px;
+  line-height: 1.2;
+}
+
+.installer-vng-commandbar-meta {
+  gap: 8px;
+  color: var(--installer-dim);
+  font-size: 10px;
+}
+
+.installer-vng-commandbar-meta code {
+  max-width: 240px;
+  overflow: hidden;
+  color: #b5a9d7;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.installer-vng-live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--installer-emerald);
+  box-shadow: 0 0 0 3px rgba(98, 214, 164, 0.1);
+}
+
+.installer-vng-modebar {
+  display: flex;
+  gap: 3px;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 0 19px;
+  padding: 3px;
+  border: 1px solid var(--installer-line);
+  border-radius: 9px;
+  background: rgba(17, 15, 25, 0.82);
+}
+
+.installer-vng-modebar button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--installer-muted);
+  font-size: 11px;
+  font-weight: 650;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+}
+
+.installer-vng-modebar button span {
+  color: var(--installer-dim);
+  font-size: 9px;
+  font-weight: 480;
+}
+
+.installer-vng-modebar button:hover {
+  color: var(--installer-text);
+}
+
+.installer-vng-modebar button.is-active {
+  border-color: var(--installer-line-strong);
+  background: rgba(167, 139, 250, 0.11);
+  color: #eee9ff;
+  box-shadow: inset 0 0 20px rgba(167, 139, 250, 0.05);
+}
+
+.installer-vng-modebar button.is-active svg {
+  color: var(--installer-violet);
+}
+
+.installer-vng-workspace.installer-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 300px);
+  align-items: start;
+  gap: 14px;
+}
+
+.installer-vng-workspace > .installer-vng-context {
+  min-width: 0;
+}
+
+.installer-vng-flow,
+.installer-vng-context {
+  width: 100%;
+  min-width: 0;
+}
+
+.installer-vng-flow > .panel {
+  border-color: rgba(167, 139, 250, 0.22);
+  background: linear-gradient(
+    145deg,
+    rgba(23, 21, 34, 0.96),
+    rgba(15, 14, 23, 0.98)
+  );
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.24);
+}
+
+.installer-vng-flow > .panel .panel-heading {
+  border-bottom-color: rgba(167, 139, 250, 0.16);
+}
+
+.installer-vng-flow > .panel .panel-heading h2,
+.installer-vng-context .panel-heading h2 {
+  color: var(--installer-text);
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: 15px;
+  letter-spacing: -0.3px;
+}
+
+.installer-vng-panel-index {
+  padding-top: 3px;
+  color: var(--installer-violet);
+  font:
+    9px/1.2 "SFMono-Regular",
+    Consolas,
+    monospace;
+  letter-spacing: 0.4px;
+  white-space: nowrap;
+}
+
+.installer-vng-form {
+  gap: 0;
+}
+
+.installer-vng-form > .installer-fields {
+  gap: 19px 14px;
+  padding: 21px;
+}
+
+.installer-vng-section-intro {
+  display: grid;
+  grid-template-columns: 27px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  padding: 0 0 11px;
+  border-bottom: 1px solid rgba(167, 139, 250, 0.13);
+}
+
+.installer-vng-step-mark {
+  display: inline-grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 1px solid rgba(167, 139, 250, 0.38);
+  border-radius: 6px;
+  color: var(--installer-violet);
+  font:
+    10px/1 "SFMono-Regular",
+    Consolas,
+    monospace;
+}
+
+.installer-vng-section-intro strong {
+  display: block;
+  margin: 1px 0 3px;
+  color: #e7e0f4;
+  font-family: "Space Grotesk", Inter, sans-serif;
+  font-size: 12px;
+  font-weight: 630;
+}
+
+.installer-vng-section-intro p {
+  margin: 0;
+  color: var(--installer-dim);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.installer-vng-access-heading,
+.installer-vng-options-heading {
+  margin-top: 4px;
+}
+
+.installer-vng-loader {
+  width: 105px;
+  height: 22px;
+  margin: -1px -5px 0 8px;
+  transform: scale(0.3);
+  transform-origin: right top;
+  opacity: 0.72;
+}
+
+.installer-vng-loader p {
+  color: var(--installer-violet) !important;
+}
+
+.installer-vng-form .field > span:first-child {
+  color: #bcb4cf;
+}
+
+.installer-vng-form input:not([type="checkbox"]):not([type="radio"]),
+.installer-vng-form select,
+.installer-vng-form textarea {
+  border-color: rgba(167, 139, 250, 0.22);
+  background: #0e0d15;
+}
+
+.installer-vng-form input:not([type="checkbox"]):not([type="radio"]):hover,
+.installer-vng-form select:hover,
+.installer-vng-form textarea:hover {
+  border-color: rgba(167, 139, 250, 0.42);
+}
+
+.installer-vng-form input:not([type="checkbox"]):not([type="radio"]):focus,
+.installer-vng-form select:focus,
+.installer-vng-form textarea:focus {
+  border-color: var(--installer-violet);
+  background: #11101b;
+  box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.1);
+}
+
+.installer-vng-form .os-profile-field {
+  padding: 2px 0 0;
+}
+
+.installer-vng-form .os-profile-toolbar {
+  gap: 10px;
+}
+
+.installer-vng-form .os-profile-toolbar .field {
+  gap: 7px;
+}
+
+.installer-vng-form .os-profile-field > small:last-child {
+  display: inline-flex;
+  margin-top: 7px;
+}
+
+.installer-vng-form .post-install-options {
+  border-color: rgba(167, 139, 250, 0.16);
+  background: rgba(13, 13, 19, 0.54);
+}
+
+.installer-vng-advanced {
+  overflow: hidden;
+  border: 1px solid rgba(167, 139, 250, 0.18);
+  border-radius: 8px;
+  background: rgba(13, 13, 19, 0.5);
+}
+
+.installer-vng-advanced summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 44px;
+  padding: 10px 13px;
+  color: #cfc6e2;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 620;
+  list-style: none;
+}
+
+.installer-vng-advanced summary::-webkit-details-marker {
+  display: none;
+}
+
+.installer-vng-advanced summary::after {
+  width: 6px;
+  height: 6px;
+  border-right: 1px solid var(--installer-violet);
+  border-bottom: 1px solid var(--installer-violet);
+  content: "";
+  transform: rotate(45deg) translateY(-2px);
+  transition: transform 160ms ease;
+}
+
+.installer-vng-advanced[open] summary {
+  border-bottom: 1px solid rgba(167, 139, 250, 0.14);
+}
+
+.installer-vng-advanced[open] summary::after {
+  transform: rotate(225deg) translate(-2px, -2px);
+}
+
+.installer-vng-advanced summary small {
+  margin-left: auto;
+  color: var(--installer-dim);
+  font-size: 9px;
+  font-weight: 450;
+}
+
+.installer-vng-advanced > .form-grid {
+  padding: 16px 13px 17px;
+}
+
+.installer-vng-submit-row {
+  align-items: flex-end;
+  padding-top: 2px;
+}
+
+.installer-vng-submit-row > div:first-child {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.installer-vng-sensitive-note {
+  gap: 5px;
+  color: var(--installer-dim);
+  font-size: 9px;
+}
+
+.installer-vng-sensitive-note svg {
+  color: var(--installer-violet);
+}
+
+.installer-vng-generate {
+  min-height: 39px !important;
+  min-width: 188px;
+  padding: 9px 15px !important;
+  border: 1px solid var(--installer-violet) !important;
+  border-radius: 7px !important;
+  background: var(--installer-violet) !important;
+  color: #161120 !important;
+  font-size: 11px !important;
+  font-weight: 760 !important;
+  box-shadow: 0 7px 24px rgba(167, 139, 250, 0.16);
+}
+
+.installer-vng-generate:hover:not(:disabled) {
+  border-color: #c5b5ff !important;
+  background: #c5b5ff !important;
+}
+
+.installer-vng-generate-password {
+  width: fit-content;
+  margin-top: 1px;
+  color: #b7a4e8;
+}
+
+.installer-vng-context {
+  position: sticky;
+  top: 22px;
+}
+
+.installer-vng-signal-card {
+  min-height: 0;
+  margin-bottom: 14px;
+  background: rgba(18, 17, 26, 0.92) !important;
+}
+
+.installer-vng-signal-content {
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex-direction: column;
+  justify-content: center;
+  padding: 11px 13px;
+}
+
+.installer-vng-signal-value {
+  align-items: flex-end;
+  gap: 8px;
+  margin: 15px 0 12px;
+}
+
+.installer-vng-signal-value > div {
+  color: #f1ebff;
+  font:
+    32px/0.95 "Space Grotesk",
+    Inter,
+    sans-serif;
+  letter-spacing: -1.7px;
+}
+
+.installer-vng-signal-value > span {
+  padding-bottom: 2px;
+  color: var(--installer-muted);
+  font-size: 10px;
+  line-height: 1.35;
+}
+
+.installer-vng-signal-rule {
+  height: 1px;
+  background: linear-gradient(90deg, rgba(167, 139, 250, 0.52), transparent);
+}
+
+.installer-vng-signal-content p {
+  margin: 10px 0 0;
+  color: var(--installer-dim);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.installer-vng-context > .panel {
+  border-color: rgba(167, 139, 250, 0.16);
+  background: rgba(18, 17, 26, 0.88);
+}
+
+.installer-vng-context > .panel .panel-heading {
+  padding: 15px 15px 13px;
+  border-bottom-color: rgba(167, 139, 250, 0.13);
+}
+
+.installer-vng-context > .panel .panel-heading h2 {
+  font-size: 12px;
+}
+
+.installer-vng-context > .panel .panel-heading p {
+  font-size: 9px;
+}
+
+.installer-vng-safety {
+  gap: 12px;
+  padding: 15px !important;
+}
+
+.installer-vng-safety li {
+  gap: 7px;
+  color: #a49db4;
+  font-size: 10px;
+}
+
+.installer-vng-safety li svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.installer-vng-profile-link {
+  gap: 6px;
+  margin: 0 15px 15px;
+  color: #b7a4e8;
+  font-size: 10px;
+  font-weight: 620;
+}
+
+.installer-vng-profile-link:hover {
+  color: #dfd4ff;
+}
+
+.installer-vng-remote {
+  margin-top: 14px;
+}
+
+.installer-vng-remote .remote-install-panel {
+  border-color: rgba(167, 139, 250, 0.22);
+  background: rgba(18, 17, 26, 0.94);
+}
+
+.installer-vng-route > .notice {
+  margin-top: 14px;
+}
+
+.installer-vng-route > .panel:last-child {
+  margin-top: 14px;
+  border-color: rgba(98, 214, 164, 0.22);
+  background: linear-gradient(
+    145deg,
+    rgba(18, 25, 25, 0.96),
+    rgba(16, 17, 23, 0.98)
+  );
+}
+
+.installer-vng-generated-list {
+  gap: 14px;
+}
+
+.installer-vng-generated {
+  border-color: rgba(98, 214, 164, 0.24);
+  background: #0c1113;
+  box-shadow: inset 2px 0 0 rgba(98, 214, 164, 0.52);
+}
+
+.installer-vng-generated code {
+  border-color: rgba(98, 214, 164, 0.18);
+  background: #080c0e;
+  color: #aae5c6;
+}
+
+.installer-vng-generated .copy-control .text-button {
+  color: var(--installer-emerald);
+}
+
+.installer-vng-generated .generated-meta a {
+  color: #b8a9e9;
+}
+
+@media (max-width: 1100px) {
+  .installer-vng-workspace.installer-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .installer-vng-context {
+    position: static;
+    grid-column: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 0.78fr) minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .installer-vng-context > .panel,
+  .installer-vng-signal-card {
+    margin-bottom: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .installer-vng-commandbar {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: -2px;
+  }
+
+  .installer-vng-commandbar-meta code {
+    max-width: 175px;
+  }
+
+  .installer-vng-modebar {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .installer-vng-modebar button {
+    justify-content: center;
+    padding-inline: 7px;
+  }
+
+  .installer-vng-modebar button span {
+    display: none;
+  }
+
+  .installer-vng-workspace.installer-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+  }
+
+  .installer-vng-context {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .installer-vng-context > .panel,
+  .installer-vng-signal-card {
+    width: 100%;
+  }
+
+  .installer-vng-form > .installer-fields {
+    padding: 16px;
+  }
+
+  .installer-vng-section-intro {
+    grid-template-columns: 27px minmax(0, 1fr);
+  }
+
+  .installer-vng-loader {
+    display: none;
+  }
+
+  .installer-vng-submit-row {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .installer-vng-generate {
+    width: 100%;
+  }
+
+  .installer-vng-advanced summary {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .installer-vng-advanced summary::after {
+    position: absolute;
+    right: 15px;
+    margin-top: 4px;
+  }
+
+  .installer-vng-advanced summary small {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .installer-vng-modebar button {
+    font-size: 10px;
+  }
+
+  .installer-vng-form > .installer-fields {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .installer-vng-form > .installer-fields > .span-2 {
+    grid-column: span 1;
+  }
+
+  .installer-vng-section-intro,
+  .installer-vng-access-heading,
+  .installer-vng-options-heading {
+    grid-column: span 1;
+  }
+
+  .installer-vng-advanced > .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .installer-vng-advanced > .form-grid > .span-2 {
+    grid-column: span 1;
+  }
+
+  .installer-vng-signal-content {
+    min-height: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .installer-vng-route *,
+  .installer-vng-route *::before,
+  .installer-vng-route *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .installer-vng-route .vng-motion {
+    transform: none !important;
+  }
+}
+@media (max-width: 480px) {
+  .installer-vng-form > .installer-fields,
+  .installer-vng-advanced > .form-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .profiles-selector-field {
+    max-width: 100%;
+    min-width: 0;
+  }
+}
